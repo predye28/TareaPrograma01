@@ -1,0 +1,120 @@
+/* Estilos para el cuerpo de la página */
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+/* Estilos para el encabezado (header) */
+header {
+    background-color: #3498db;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Estilos para el título h1 */
+h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+/* Estilos para el contenedor de botones */
+.botones-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea los botones a la izquierda */
+    width: 100%;
+    max-width: 400px;
+    margin-top: 20px;
+}
+
+/* Estilos para los botones de "Perfil", "Estudiantes", "Profesor" y "Usuario" */
+button.perfil,
+button.estudiantes,
+button.profesor,
+button.usuario {
+    background-color: #3498db;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin: 10px 0;
+    text-align: center; /* Centra el texto horizontalmente */
+}
+
+/* Cambiar el color de fondo al pasar el cursor por encima */
+button.perfil:hover,
+button.estudiantes:hover,
+button.profesor:hover,
+button.usuario:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para el contenedor de registro */
+.registro-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* Estilos para el formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Estilos para el enlace de inicio de sesión */
+p a {
+    text-decoration: none;
+    color: #3498db;
+}
+
+p a:hover {
+    text-decoration: underline;
+}

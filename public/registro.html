@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Registrarse</title>
+</head>
+<body>
+    <div class="registro-container">
+        <h2>Registrarse</h2>
+        <form action="procesar_registro.php" method="POST">
+            <input type="text" name="usuario" placeholder="Nombre de usuario" required>
+            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <input type="text" name="nombre" placeholder="Nombre completo" required>
+            <input type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" required>
+            <input type="file" name="avatar" accept="image/*" required>
+            <button type="submit">Registrarse</button>
+        </form>
+        <p>¿Ya tienes una cuenta? <a href="index.html">Iniciar sesión</a></p>
+    </div>
+</body>
+</html>
