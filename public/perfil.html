@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Mi Página</title>
+</head>
+<body>
+    <header>
+        <h1>Tec Digitalito</h1>
+    </header>
+
+    <div class="perfil-container">
+        <h2> Perfil </h2>
+        <div class="amigos-container">
+            <p>Amigos: <span id="cantidad-amigos">100</span></p>
+        </div>
+        <div class="imagen-container">
+            <img src="imagen_usuario.jpg" alt="Imagen de perfil" id="imagen-perfil">
+            <input type="file" id="input-imagen" accept="image/*">
+        </div>
+        <div class="datos-container">
+            <input type="text" name="usuario" placeholder="Nombre de usuario" required>
+            <input type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" required> 
+            <button id="editar">Editar</button>
+            <button id="guardar" disabled>Guardar</button>
+            <button id="ver-mensajes">Ver Mensajes</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
