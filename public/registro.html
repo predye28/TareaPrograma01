@@ -9,7 +9,11 @@
 <body>
     <div class="registro-container">
         <h2>Registrarse</h2>
-        <form action="procesar_registro.php" method="POST">
+        <div id="mensaje" style="display: none;">
+            <p>Registro exitoso. ¡Bienvenido!</p>
+            <button id="okButton">Iniciar sesión</button>
+        </div>
+        <form action="procesar_registro" method="POST" id="registroForm">
             <input type="text" name="usuario" placeholder="Nombre de usuario" required>
             <input type="password" name="contrasena" placeholder="Contraseña" required>
             <input type="text" name="nombre" placeholder="Nombre completo" required>
@@ -19,5 +23,30 @@
         </form>
         <p>¿Ya tienes una cuenta? <a href="index.html">Iniciar sesión</a></p>
     </div>
+    
+    <script>
+        // Mostrar el mensaje cuando se recibe la respuesta del servidor
+        const mensajeDiv = document.getElementById("mensaje");
+        const okButton = document.getElementById("okButton");
+        const registroForm = document.getElementById("registroForm");
+
+        // Agregar un evento al botón "Aceptar" para redirigir al usuario
+        okButton.addEventListener("click", function() {
+            window.location.href = "index.html"; // Redirigir a index.html
+        });
+
+        // Manejar la respuesta del servidor
+        const urlParams = new URLSearchParams(window.location.search);
+        const registroExitoso = urlParams.get('registroExitoso');
+        if (registroExitoso === 'true') {
+            mensajeDiv.style.display = "block";
+            // Deshabilitar los elementos del formulario después del registro exitoso
+            const formElements = registroForm.elements;
+            for (let i = 0; i < formElements.length; i++) {
+                formElements[i].disabled = true;
+            }
+        }
+    </script>
 </body>
 </html>
+
