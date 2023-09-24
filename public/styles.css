@@ -18,14 +18,24 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 30px 20px; /* Aumentar el padding superior e inferior */
     width: 100%;
+    text-align: center;
 }
 
 /* Estilos para el título h1 */
 h1 {
     font-size: 1.5rem;
     margin: 0;
+    text-align: center;
+}
+
+h2{
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 0;
+    color: #3498db;
+    padding: 10px;
 }
 
 /* Estilos para el título h2 del menú estudiante */
@@ -41,6 +51,7 @@ h1 {
 .botones-container {
     display: flex;
     flex-direction: column;
+    text-align: center;
     align-items: flex-start; /* Alinea los botones a la izquierda */
     width: 100%;
     max-width: 400px;
@@ -78,7 +89,9 @@ button.cursos-disponibles,
 button.cursos-matriculados,
 button.estudiantes,
 button.profesor,
-button.usuario {
+button.usuario,
+button.ver-cursos,
+button.crear-cursos{
     background-color: #3498db;
     color: #fff;
     padding: 15px 30px;
@@ -98,7 +111,9 @@ button.cursos-disponibles:hover,
 button.cursos-matriculados:hover,
 button.estudiantes:hover,
 button.profesor:hover,
-button.usuario:hover {
+button.usuario:hover ,
+button.crear-cursos:hover,
+button.ver-cursos:hover{
     background-color: #2980b9;
     transform: scale(1.05);
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
@@ -155,4 +170,109 @@ p a {
 
 p a:hover {
     text-decoration: underline;
+}
+
+
+/*  Lista de usuarios  */
+
+/* Estilos para el contenedor principal */
+.busqueda-container {
+    display: flex;
+    justify-content: flex-end; /* Coloca los elementos al extremo derecho */
+    align-items: center; /* Alinea verticalmente los elementos */
+    padding: 20px;
+}
+
+/* Estilos para el contenedor de búsqueda */
+.buscar-input {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos en la barra de búsqueda */
+}
+
+/* Estilos para el campo de entrada */
+#nombre-usuario {
+    margin-right: 10px; /* Agrega espacio entre el campo de entrada y el botón de búsqueda */
+}
+
+/* Estilos para el contenedor de resultados */
+.resultado-container {
+    margin-top: 20px; /* Agrega margen en la parte superior para moverlo hacia abajo */
+    margin-left: 20px; /* Agrega margen en la izquierda para moverlo hacia la izquierda */
+}
+
+/* Estilos para los botones de resultados */
+.resultado-container button {
+    margin-bottom: 5px; /* Agrega espacio entre los botones de resultado */
+}
+
+/* Estilos para colocar los botones a la derecha del div */
+.botones-derecha {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+
+.boton-volver button {
+    
+    background-color: #3498db;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    position: fixed;
+    bottom: 20px; /* Ajusta la distancia desde la parte inferior */
+    right: 20px; /* Ajusta la distancia desde la derecha */
+    z-index: 9999;
+}
+
+/* Estilos para el contenedor de usuario */
+.contenedor-usuario {
+    background-color: #fff; /* Fondo blanco */
+    padding: 80px; /* Espaciado interno para contenido */
+}
+/* Contenedor principal */
+.contenedor-curso {
+    display: flex;
+    justify-content: space-between; /* Distribuye los elementos a los lados */
+}
+
+/* Estilos para los divs de información y temas */
+.informacion-curso {
+    background-color: white;
+    padding: 200px;
+    flex: 1; /* Toma el espacio disponible */
+    margin-right: 100px; /* Agrega un margen a la derecha para separarlos */
+}
+
+.temas-curso {
+    background-color: white;
+    padding: 200px;
+    flex: 1; /* Toma el espacio disponible */
+    margin-left: 100px; /* Agrega un margen a la izquierda para separarlos */
+}
+
+
+.botones{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    
+}
+
+.crear-curso button {
+    
+    background-color: #3498db;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    position: fixed;
+    bottom: 20px; 
+    right: 380px; 
+    z-index: 9999;
 }

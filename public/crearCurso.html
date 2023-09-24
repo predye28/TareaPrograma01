@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Crear Curso</title>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2>Crear Curso</h2> <!-- Título de Crear Curso -->
+
+    <div class="crear-curso-form">
+        <form>
+            <label for="codigo-curso">Código del Curso:</label>
+            <input type="text" id="codigo-curso" name="codigo-curso" required>
+
+            <label for="nombre-curso">Nombre del Curso:</label>
+            <input type="text" id="nombre-curso" name="nombre-curso" required>
+
+            <label for="descripcion-curso">Descripción del Curso:</label>
+            <input type="text" id="descripcion-curso" name="descripcion-curso" required>
+
+            <label for="fecha-inicio">Fecha de Inicio:</label>
+            <input type="date" id="fecha-inicio" name="fecha-inicio" required>
+
+            <label for="fecha-fin">Fecha de Fin:</label>
+            <input type="date" id="fecha-fin" name="fecha-fin" required>
+
+            <label for="imagen-curso">Foto del Curso:</label>
+            <input type="file" id="imagen-curso" accept="image/*" required>
+        </form>
+    </div>
+
+    <div class="crear-curso">
+        <button>Crear</button>
+    </div>
+    
+    
+    <!-- Botón de Volver -->
+    <div class="boton-volver">
+        <button>Volver</button>
+    </div>
+    
+</body>
+</html>
