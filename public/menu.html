@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <title>Mi Página</title>
+    <title>Menu</title>
 </head>
 <body>
     <header>
@@ -14,14 +14,31 @@
     <h2>MENU</h2>
 
     <div class="botones-container">
-        <button class="perfil">Perfil</button>
-        <button class="estudiantes">Estudiantes</button>
-        <button class="profesor">Profesor</button>
-        <button class="usuario">Usuario</button>
+        <button class="perfil" onclick="redirigirPerfil()">Perfil</button>
+        <button class="estudiantes" onclick="redirigirMenuEstudiante()">Estudiantes</button>
+        <button class="profesor" onclick="redirigirMenuProfesor()">Profesor</button>
+        <button class="usuario" onclick="redirigirUsuario()">Usuario</button>
     </div>
 
     <div class="boton-volver">
-        <button>Salir</button>
+        <button onclick="redirigirVolver()">Salir</button>
     </div>
+    <script>
+        function redirigirMenuEstudiante() {
+            window.location.href = 'menuEstudiante.html';
+        }
+        function redirigirMenuProfesor() {
+            window.location.href = 'menuProfesor.html';
+        }
+        function redirigirPerfil() {
+            window.location.href = 'perfil.html';
+        }
+        function redirigirUsuario() {
+            window.location.href = 'listaUsuarios.html';
+        }
+        function redirigirVolver() {
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>

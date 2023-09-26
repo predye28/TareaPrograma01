@@ -11,18 +11,26 @@
         <h1>TEC DIGITALITO</h1>
     </header>
 
-     <!-- Título del Menú Profesor -->
 
     <div class="botones-container">
         <h2>Menú Profesor</h2>
-        <button class="crear-cursos">Crear Cursos</button>
-        <button class="ver-cursos">Ver Cursos</button>
+        <button class="crear-cursos" onclick="redirigirCrearCurso()">Crear Cursos</button>
+        <button class="ver-cursos" onclick="redirigirListaCursos()">Ver Cursos</button>
     </div>
 
-    <!-- Botón de Volver -->
     <div class="boton-volver">
-        <button>Volver</button>
+        <button onclick="volverPantalla()">Volver</button>
     </div>
-    
+    <script>
+        function volverPantalla() {
+            window.location.href = 'menu.html';
+        }
+        function redirigirCrearCurso() {
+            window.location.href = 'crearCurso.html';
+        }
+        function redirigirListaCursos() {
+            window.location.href = 'listaCursos.html';
+        }
+    </script>
 </body>
 </html>
