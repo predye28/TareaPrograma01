@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Crear Evaluación</title>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2>Crear Evaluación</h2> <!-- Título de Crear Evaluación -->
+
+    <div class="evaluacion-form">
+        <form>
+            <!-- Formulario para datos generales de la evaluación -->
+            <label for="nombre-evaluacion">Nombre de la Evaluación:</label>
+            <input type="text" id="nombre-evaluacion" name="nombre-evaluacion" required>
+
+            <label for="fecha-inicio">Fecha de Inicio:</label>
+            <input type="date" id="fecha-inicio" name="fecha-inicio" required>
+
+            <label for="fecha-fin">Fecha de Fin:</label>
+            <input type="date" id="fecha-fin" name="fecha-fin" required>
+
+             <!-- Formulario para agregar preguntas -->
+            <h2>Agregar Preguntas</h2>
+
+            <label for="pregunta">Pregunta:</label>
+            <input type="text" id="pregunta" name="pregunta" required>
+
+            
+            
+
+        </form>
+    </div>
+
+    <div class="respuestas">
+        <label for="opcion1">Opción 1:</label>
+        <input type="text" id="opcion1" name="opcion1" required>
+
+        <label for="opcion2">Opción 2:</label>
+        <input type="text" id="opcion2" name="opcion2" required>
+
+        <label for="opcion3">Opción 3:</label>
+        <input type="text" id="opcion3" name="opcion3" required>
+        
+    </div>
+
+    <label for="correcta">Opción Correcta:</label>
+    
+    <select id="correcta" name="correcta">
+        <option value="opcion1">Opción 1</option>
+        <option value="opcion2">Opción 2</option>
+        <option value="opcion3">Opción 3</option>
+    </select>
+
+    
+    <!-- Botón para guardar pregunta -->
+    <button id="guardar-pregunta">Guardar Pregunta</button>
+
+    <!-- Botón para terminar evaluación -->
+    <button id="terminar-evaluacion">Terminar Evaluación</button>
+
+    <!-- Botón de Volver -->
+    <div class="boton-volver">
+        <button>Volver</button>
+    </div>
+    
+</body>
+</html>
