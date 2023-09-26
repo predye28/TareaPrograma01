@@ -1,2 +1,16 @@
-EXPRESS:
+Modulos para instalar:
+
+EXPRESS
 npm install express
+
+MONGO
+npm install mongodb
+
+bilblioteca para facilitar la conexion de mongodb a express
+npm install mongoose
+
+biblioteca de Neo4j para Node.js:
+npm install neo4j-driver
+
+biblioteca para manejar una session
+npm install express express-session
