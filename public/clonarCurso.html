@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Clonar Curso</title>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2>Clonar Curso</h2> 
+
+    <div class="crear-curso-form">
+        <form  id="crearCursoForm">
+            <label for="codigo-curso">Código del Curso:</label>
+            <input type="text" name="codigoCurso" required>
+
+            <label for="nombre-curso">Nombre del Curso:</label>
+            <input type="text" name="nombreCurso"  required>
+
+            <label for="descripcion-curso">Descripción del Curso:</label>
+            <input type="text" name="descripcionCurso"  required>
+
+            <label for="fecha-inicio">Fecha de Inicio:</label>
+            <input type="date" name="fechaInicio" required>
+
+            <label for="fecha-fin">Fecha de Fin:</label>
+            <input type="date" name="fechaFin"  required>
+
+            <label for="imagen-curso">Foto del Curso:</label>
+            <input type="file" name="imagenCurso" accept="image/*" required>
+
+            <button type="submit" >Clonar</button>
+        </form>
+
+    </div>
+    
+    
+    <!-- Botón de Volver -->
+    <div class="boton-volver">
+        <button onclick="volverPantalla()">Volver</button>
+    </div>
+    <script>
+        function volverPantalla() {
+            window.location.href = 'curso.html';
+        }
+
+    </script>
+</body>
+</html>

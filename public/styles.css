@@ -245,14 +245,14 @@ p a:hover {
     background-color: white;
     padding: 200px;
     flex: 1; /* Toma el espacio disponible */
-    margin-right: 100px; /* Agrega un margen a la derecha para separarlos */
+    margin-right: 50px; /* Agrega un margen a la derecha para separarlos */
 }
 
 .temas-curso {
     background-color: white;
     padding: 200px;
     flex: 1; /* Toma el espacio disponible */
-    margin-left: 100px; /* Agrega un margen a la izquierda para separarlos */
+    margin-left: 0px; /* Agrega un margen a la izquierda para separarlos */
 }
 
 /* Estilos para los botones en la lista de cursos */
@@ -261,7 +261,7 @@ p a:hover {
     color: #fff;
     border: none;
     padding: 15px 20px;
-    margin: 5px 0;
+    margin: 15px 0;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -450,4 +450,120 @@ button:hover {
 
 #pregunta {
     width: 200%; /* Haz que ocupe el 100% del ancho del contenedor */
+}
+
+/* Contenedor principal de temas.html */
+.contenedor-tema {
+    display: flex;
+    justify-content: space-between; /* Distribuye los elementos a los lados */
+}
+
+/* Estilos para los divs de información y temas */
+.informacion-tema {
+    background-color: white;
+    padding: 200px;
+    flex: 1; /* Toma el espacio disponible */
+    margin-right: 50px; /* Agrega un margen a la derecha para separarlos */
+}
+
+.subtemas {
+    background-color: white;
+    padding: 200px;
+    flex: 1; /* Toma el espacio disponible */
+    margin-left: 0px; /* Agrega un margen a la izquierda para separarlos */
+}
+
+/* Contenedor principal de subtemas.html */
+.contenedor-subtema {
+    display: flex;
+    justify-content: space-between; /* Distribuye los elementos a los lados */
+}
+
+/* Estilos para los divs de información y temas */
+.informacion-subtema {
+    background-color: white;
+    padding: 200px;
+    flex: 1; /* Toma el espacio disponible */
+    margin-right: 50px; /* Agrega un margen a la derecha para separarlos */
+}
+
+
+
+/* Estilos para consultaEstudiantes.html*/
+
+/* Estilos de los mensajes */
+.mensaje {
+    display: flex;
+    flex-direction: column; /* Coloca los elementos en columna */
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.mensaje label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Estilos de los botones */
+.responder {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    align-self: flex-end;
+}
+
+.responder:hover {
+    background-color: #555;
+}
+
+/* Estilos del formulario */
+#formulario-mensaje {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+#formulario-mensaje h2 {
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+#formulario-mensaje label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
+}
+
+#formulario-mensaje input[type="text"],
+#formulario-mensaje textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#formulario-mensaje button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#formulario-mensaje button:hover {
+    background-color: #555;
 }

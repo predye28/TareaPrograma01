@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Consulta de Estudiantes</title>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2>Consulta Estudiantes</h2> 
+
+    <div id="mensajes">
+        <div class="mensaje">
+            <label for="nombre">Nombre del Estudiante</label>
+            <label for="mensaje">Mensaje 1: jsjdnjdndjnjea jsnfafsask sandajn</label>
+            <button class="responder" onclick="iniciarConversacion(1)">Responder</button>
+        </div>
+        <div class="mensaje">
+            <label for="nombre">Nombre del Estudiante</label>
+            <label for="mensaje">Cuando hay clases profe? </label>
+            <button class="responder" onclick="iniciarConversacion(2)">Responder</button>
+        </div>
+        <div class="mensaje">
+            <label for="nombre">Nombre del Estudiante</label>
+            <label for="mensaje">Mensaje 3:</label>
+            <button class="responder" onclick="iniciarConversacion(3)">Responder</button>
+        </div>
+        <div class="mensaje">
+            <label for="nombre">Nombre del Estudiante</label>
+            <label for="mensaje">Mensaje 4:</label>
+            <button class="responder" onclick="iniciarConversacion(4)">Responder</button>
+        </div>
+    </div>
+
+    <div class="boton-volver">
+        <button onclick="volverPantalla()">Volver</button>
+    </div>
+    <script>
+        function volverPantalla() {
+            window.location.href = 'curso.html';
+        }
+    </script>
+</body>
+</html>
+
+
