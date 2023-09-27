@@ -567,3 +567,12 @@ button:hover {
 #formulario-mensaje button:hover {
     background-color: #555;
 }
+.resultado-container {
+    max-height: 300px; 
+    overflow-y: auto;
+}
+
+.resultado-container button {
+    display: block; 
+    margin: 10px 0; 
+}

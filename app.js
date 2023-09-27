@@ -40,7 +40,7 @@ const Usuario = mongoose.model('Usuario', usuarioSchema);
 
 const cursoSchema = new mongoose.Schema({
   codigoCurso: String,
-  nombreCurso: String,
+  nombre: String,
   descripcion: String,
   fechaInicio: Date,
   fechaFin: Date,
@@ -81,7 +81,7 @@ app.post('/procesar_registro', async (req, res) => {
 
     // Crea un nodo de usuario en Neo4j
     const result = await session.run(
-      'CREATE (u:Usuario {username: $username, nombre: $nombre}) RETURN u',
+      'CREATE (u:Usuario {username: $username}) RETURN u',
       params 
     );
   
@@ -200,6 +200,99 @@ app.get('/obtenerCursos', async (req, res) => {
   } catch (error) {
     console.error('Error al obtener la lista de cursos:', error);
     res.status(500).json({ error: 'Error al obtener la lista de cursos' });
+  }
+});
+
+// Después del código que establece la sesión del usuario
+app.get('/obtenerInformacionUsuario', async (req, res) => {
+  try {
+    const usuarioEnSesion = req.session.usuario;
+
+    if (usuarioEnSesion) {
+      // Consulta la información del usuario en MongoDB
+      const usuarioInfo = await Usuario.findOne({ usuario: usuarioEnSesion.usuario });
+
+      if (usuarioInfo) {
+
+        // Puedes enviar la información del usuario como respuesta si es necesario
+        res.json(usuarioInfo);
+      } else {
+        res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+    } else {
+      res.status(401).json({ error: 'No se ha iniciado sesión' });
+    }
+  } catch (error) {
+    console.error('Error al obtener la información del usuario:', error);
+    res.status(500).json({ error: 'Error al obtener la información del usuario' });
+  }
+});
+// Agrega una nueva ruta para actualizar la información del usuario
+app.post('/actualizarUsuario', async (req, res) => {
+  try {
+    const { usuario, contrasena, nombre, fecha_nacimiento, imagen } = req.body;
+
+    // Actualiza la información del usuario en MongoDB
+    await Usuario.findOneAndUpdate(
+      { usuario: usuario },
+      { contrasena, nombre, fecha_nacimiento, imagen },
+      { new: true }
+    );
+
+    const mensaje = "Cambios guardados exitosamente.";
+
+    // Envia una respuesta en formato JSON con un mensaje de éxito
+    res.json({ mensaje });
+  } catch (error) {
+    console.error('Error al actualizar la información del usuario:', error);
+    res.status(500).json({ error: 'Error al actualizar la información del usuario' });
+  }
+});
+
+app.get('/obtenerUsuarios', async (req, res) => {
+  try {
+    const usuarios = await Usuario.find({}, 'usuario'); // Consulta todos los usuarios y obtén solo el campo 'usuario'
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener la lista de usuarios:', error);
+    res.status(500).json({ error: 'Error al obtener la lista de usuarios' });
+  }
+});
+app.get('/obtenerInformacionUsuarioSeleccionado', async (req, res) => {
+  try {
+      const usuarioSeleccionado = req.query.usuario; // Obtén el nombre de usuario seleccionado
+
+      // Aquí debes escribir la lógica para buscar la información del usuario seleccionado en la base de datos
+      // y luego enviarla como respuesta en formato JSON
+      // Por ejemplo, si estás usando MongoDB y Mongoose:
+      const usuarioInfoSeleccionado = await Usuario.findOne({ usuario: usuarioSeleccionado });
+
+      if (usuarioInfoSeleccionado) {
+          res.json(usuarioInfoSeleccionado);
+      } else {
+          res.status(404).json({ mensaje: 'Usuario seleccionado no encontrado' });
+      }
+  } catch (error) {
+      console.error('Error al obtener la información del usuario seleccionado:', error);
+      res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+});
+app.get('/obtenerCurso', async (req, res) => {
+  try {
+    const nombreCurso = req.query.curso;
+
+    // Consulta MongoDB para obtener los detalles del curso por su nombre
+    const curso = await Curso.findOne({ nombre: nombreCurso });
+
+    if (curso) {
+      // Envía los detalles del curso como respuesta en formato JSON
+      res.json(curso);
+    } else {
+      res.status(404).json({ error: 'Curso no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error al obtener los detalles del curso:', error);
+    res.status(500).json({ error: 'Error al obtener los detalles del curso' });
   }
 });
 

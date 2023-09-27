@@ -11,16 +11,17 @@
         <h1>TEC DIGITALITO</h1>
     </header>
 
-    <h2>Nombre del Curso</h2> <!-- Título del Curso -->
-
-    
-    
+    <h2 >Informacion del curso </h2>
 
     <div class="contenedor-curso">
         <h2 for="curso">Curso:</h2> 
-        <div class="informacion-curso">
-            
-            <!-- Información del Curso (izquierda) -->
+        <div class="informacion-curso" id="curso-info">
+            <p><strong>Nombre del Curso: </strong> <span id="nombre-curso"></span></p>
+            <p><strong>Codigo del curso:</strong> <span id="codigo-curso"></span></p>
+            <p><strong>Descripción:</strong> <span id="descripcion-curso"></span></p>
+            <p><strong>Fecha de Inicio:</strong> <span id="fecha-inicio-curso"></span></p>
+            <p><strong>Fecha de Fin:</strong> <span id="fecha-fin-curso"></span></p>
+            <p><strong>Direccion de la imagen:</strong> <span id="imagen-curso"></span></p>
         </div>
         <h2 for="temas">Temas:</h2>
         <div class="temas-curso">
@@ -30,7 +31,7 @@
     <!-- Botones en la parte inferior -->
     <div class="botones">
         <button class="agregar-tema">Agregar Tema</button>
-        <button class="agregar-subtema">Agregar Subtema</button>
+        <button class "agregar-subtema">Agregar Subtema</button>
         <button class="ver-estudiantes">Ver Lista de Estudiantes</button>
         <button class="ver-mensajes">Ver Mensajes</button>
         <button class="clonar-curso">Clonar Curso</button>
@@ -39,10 +40,48 @@
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
+
     <script>
         function volverPantalla() {
             window.location.href = 'listaCursos.html';
         }
+        
+        document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cursoNombre = urlParams.get('curso');
+
+    if (cursoNombre) {
+        // Realiza una solicitud al servidor para obtener los detalles del curso
+        fetch(`/obtenerCurso?curso=${cursoNombre}`)
+            .then(response => response.json())
+            .then(curso => {
+                // Agrega el nombre del curso al título
+                console.log(curso)
+                const nombreCursoElement = document.getElementById('nombre-curso');
+                nombreCursoElement.textContent += ` ${curso.nombre}`;
+
+                const codigoCursoElement = document.getElementById('codigo-curso');
+                codigoCursoElement.textContent += ` ${curso.codigoCurso}`;
+
+                const descripcionCursoElement = document.getElementById('descripcion-curso');
+                descripcionCursoElement.textContent = curso.descripcion;
+
+                const fechaInicioCursoElement = document.getElementById('fecha-inicio-curso');
+                fechaInicioCursoElement.textContent = curso.fechaInicio;
+
+                const fechaFinCursoElement = document.getElementById('fecha-fin-curso');
+                fechaFinCursoElement.textContent = curso.fechaFin;
+
+                const imagenCursoElement = document.getElementById('imagen-curso');
+                imagenCursoElement.textContent = curso.imagen;
+
+                // Puedes agregar más campos según sea necesario
+            })
+            .catch(error => {
+                console.error('Error al obtener los detalles del curso:', error);
+            });
+    }
+});
     </script>
 </body>
 </html>

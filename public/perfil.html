@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <title>Mi Página</title>
+    <style>
+        /* Estilo para ocultar el botón "Guardar" cuando está deshabilitado */
+        #guardar:disabled {
+            display: none;
+        }
+    </style>
+    <title>Perfil</title>
 </head>
 <body>
     <header>
@@ -12,24 +18,146 @@
     </header>
 
     <div class="perfil-container">
-        <h2> Perfil </h2>
+        <h2>Perfil</h2>
         <div class="amigos-container">
             <p>Amigos: <span id="cantidad-amigos">100</span></p>
         </div>
-        <div class="imagen-container">
-            <img src="imagen_usuario.jpg" alt="Imagen de perfil" id="imagen-perfil">
-            <input type="file" id="input-imagen" accept="image/*">
-        </div>
         <div class="datos-container">
-            <input type="text" name="usuario" placeholder="Nombre de usuario" required>
-            <input type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" required> 
-            <button id="editar">Editar</button>
-            <button id="guardar" disabled>Guardar</button>
+            <label for="nombre-usuario">Nombre de usuario:</label>
+            <span id="nombre-usuario"></span>
+
+            <label for="contrasena">Contraseña:</label>
+            <input type="text" name="contrasena" id="contrasena" placeholder="Contraseña" required disabled>
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" id="nombre" placeholder="Nombre" required disabled>
+
+            <label for="fecha-nacimiento">Fecha de nacimiento:</label>
+            <input type="date" name="fecha_nacimiento" id="fecha-nacimiento" required disabled>
+
+            <label for="imagen">URL de la imagen:</label>
+            <input type="text" name="imagen" id="imagen" placeholder="URL de la imagen" required disabled>
+
+            <button id="editar" onclick="habilitarEdicion()">Editar</button>
+            <button id="guardar" disabled onclick="guardarCambios()">Guardar</button>
             <button id="ver-mensajes">Ver Mensajes</button>
+
+            <div id="mensaje"></div>
         </div>
     </div>
+    <div class="boton-volver">
+        <button onclick="volverPantalla()">Volver</button>
+    </div>
+    <script>
+        function volverPantalla() {
+            window.location.href = 'menu.html';
+        }   
+        let usuarioInfo = null;
+    
+        // Función para cargar la información del usuario
+        async function cargarInformacionUsuario() {
+            try {
+                const response = await fetch('/obtenerInformacionUsuario');
+                if (response.ok) {
+                    usuarioInfo = await response.json();
+                    console.log('Información del usuario:', usuarioInfo);
+    
+                    // Llena los campos con la información del usuario
+                    document.getElementById('nombre-usuario').textContent = usuarioInfo.usuario;
+                    document.getElementById('contrasena').value = usuarioInfo.contrasena;
+                    document.getElementById('nombre').value = usuarioInfo.nombre;
+                    document.getElementById('fecha-nacimiento').value = formatearFecha(usuarioInfo.fecha_nacimiento);
+                    document.getElementById('imagen').value = usuarioInfo.imagen;
+                } else {
+                    console.error('Error al obtener la información del usuario:', response.status);
+                }
+            } catch (error) {
+                console.error('Error al obtener la información del usuario:', error);
+            }
+        }
+    
+        // Función para habilitar la edición de campos
+        function habilitarEdicion() {
+            const camposEditables = ['contrasena', 'nombre', 'fecha-nacimiento', 'imagen'];
+            const botonGuardar = document.getElementById('guardar');
 
-    <script src="script.js"></script>
+            // Habilitar campos editables y botón de guardar
+            camposEditables.forEach(campo => {
+                document.getElementById(campo).removeAttribute('disabled');
+            });
+            botonGuardar.removeAttribute('disabled');
+        }
+    
+        // Función para formatear una fecha en "yyyy-MM-dd"
+        function formatearFecha(fecha) {
+            const date = new Date(fecha);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+    
+        // Función para guardar los cambios
+        async function guardarCambios() {
+            try {
+                // Obtener los valores editados
+                const contrasena = document.getElementById('contrasena').value;
+                const nombre = document.getElementById('nombre').value;
+                const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+                const imagen = document.getElementById('imagen').value;
+    
+                // Enviar los valores al servidor para actualizar
+                const response = await fetch('/actualizarUsuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        usuario: usuarioInfo.usuario, // Usar el nombre de usuario actual
+                        contrasena,
+                        nombre,
+                        fecha_nacimiento: fechaNacimiento,
+                        imagen,
+                    }),
+                });
+    
+                if (response.ok) {
+                    const mensaje = await response.json();
+                    console.log('Mensaje del servidor:', mensaje);
+    
+                    // Deshabilitar campos editables y botón de guardar
+                    const camposEditables = ['contrasena', 'nombre', 'fecha-nacimiento', 'imagen'];
+                    const botonGuardar = document.getElementById('guardar');
+    
+                    camposEditables.forEach(campo => {
+                        document.getElementById(campo).setAttribute('disabled', 'disabled');
+                    });
+                    botonGuardar.setAttribute('disabled', 'disabled');
+    
+                    // Mostrar mensaje de éxito
+                    const mensajeDiv = document.getElementById('mensaje');
+                    mensajeDiv.textContent = mensaje.mensaje;
+                    mensajeDiv.style.color = 'green';
+                } else {
+                    console.error('Error al guardar los cambios:', response.status);
+    
+                    // Mostrar mensaje de error
+                    const mensajeDiv = document.getElementById('mensaje');
+                    mensajeDiv.textContent = 'Error al guardar los cambios.';
+                    mensajeDiv.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Error al guardar los cambios:', error);
+    
+                // Mostrar mensaje de error
+                const mensajeDiv = document.getElementById('mensaje');
+                mensajeDiv.textContent = 'Error al guardar los cambios.';
+                mensajeDiv.style.color = 'red';
+            }
+        }
+    
+        // Llama a la función para cargar la información del usuario cuando la página se carga
+        window.onload = cargarInformacionUsuario;
+    </script>
 </body>
 </html>
-
