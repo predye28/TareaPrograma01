@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Detalles del Curso</title>
+    <style>
+        /* Estilos para los botones */
+        .botonesCurso button {
+            margin-right: 10px; /* Agrega un margen entre los botones */
+        }
+
+        /* Estilos para el div de información del curso */
+        .informacion-curso {
+            padding: 10px; /* Agrega un espacio interno para separar el contenido del borde */
+            border: 1px solid #ccc; /* Agrega un borde alrededor del div */
+            margin-bottom: 20px; /* Agrega espacio debajo del div */
+        }
+
+        /* Estilos para el div de temas del curso (puedes ajustar según sea necesario) */
+        .temas-curso {
+            padding: 10px; /* Agrega espacio interno para separar el contenido del borde */
+            border: 1px solid #ccc; /* Agrega un borde alrededor del div */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -29,7 +48,7 @@
         </div>
     </div>
     <!-- Botones en la parte inferior -->
-    <div class="botones">
+    <div class="botonesCurso ">
         <button class="agregar-tema">Agregar Tema</button>
         <button class "agregar-subtema">Agregar Subtema</button>
         <button class="ver-estudiantes">Ver Lista de Estudiantes</button>
@@ -73,7 +92,7 @@
                 fechaFinCursoElement.textContent = curso.fechaFin;
 
                 const imagenCursoElement = document.getElementById('imagen-curso');
-                imagenCursoElement.textContent = curso.imagen;
+                imagenCursoElement.textContent = curso.imagenCurso;
 
                 // Puedes agregar más campos según sea necesario
             })

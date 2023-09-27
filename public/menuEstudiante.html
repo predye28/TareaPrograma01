@@ -13,12 +13,23 @@
 
     <div class="botones-container">
         <h2>Menú Estudiante</h2>
-        <button class="cursos-disponibles">Cursos Disponibles</button>
-        <button class="cursos-matriculados">Cursos Matriculados</button>
+        <button class="cursos-disponibles" onclick="redirigirListaCursosEstudiante()">Cursos Disponibles</button>
+        <button class="cursos-matriculados" onclick="redirigirCursosMatriculados()">Cursos Matriculados</button>
     </div>
 
     <div class="boton-volver">
-        <button>Volver</button>
+        <button onclick="volverPantalla()">Volver</button>
     </div>
+    <script>
+        function volverPantalla() {
+            window.location.href = 'menu.html';
+        }
+        function redirigirCursosMatriculados() {
+            window.location.href = 'listaCursosMatriculados.html';
+        }
+        function redirigirListaCursosEstudiante() {
+            window.location.href = 'listaCursosEstudiantes.html';
+        }
+    </script>
 </body>
 </html>
