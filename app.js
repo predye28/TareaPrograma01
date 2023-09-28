@@ -48,6 +48,34 @@ const cursoSchema = new mongoose.Schema({
 }, { collection: 'curso' }); 
 
 const Curso = mongoose.model('Curso', cursoSchema);
+
+const temaSchema = new mongoose.Schema({
+  nombreTema: String,
+  descripcionTema: String,
+}, { collection: 'tema' }); 
+
+const Tema = mongoose.model('Tema', temaSchema);
+
+const subtemaSchema = new mongoose.Schema({
+  nombreSubtema: String,
+  descripcionSubtema: String,
+}, { collection: 'subtema' }); 
+
+const SubTema = mongoose.model('Subtema', subtemaSchema);
+
+const evaluacionSchema = new mongoose.Schema({
+  nombre: String,
+  preguntas: [{
+      texto: String,
+      respuestas: [{
+          texto: String,
+          correcta: Boolean
+      }]
+  }]
+}, { collection: 'evaluaciones' });
+
+const Evaluacion = mongoose.model('Evaluacion', evaluacionSchema);
+
 //neo4j
 const neo4j = require('neo4j-driver');
 
@@ -296,6 +324,207 @@ app.get('/obtenerCurso', async (req, res) => {
   }
 });
 
+app.post('/crearTema', async (req, res) => {
+  try {
+    const codigoCurso = req.body['codigo-curso']; // Obtener el código del curso del formulario
+    const nombreTema = req.body['nombre-tema'];
+    const descripcionTema = req.body['descripcion-tema'];
+    
+    // Guardar la información del tema en MongoDB
+    const nuevoTema = new Tema({
+      nombreTema: nombreTema,
+      descripcionTema: descripcionTema,
+    });
+    await nuevoTema.save();
+
+    // Crear un nodo en Neo4j para el tema
+    const session = driver.session();
+    const params = {
+      nombreTema: nombreTema,
+      descripcionTema: descripcionTema,
+    };
+    await session.run(
+      'CREATE (t:Tema {nombreTema: $nombreTema, descripcionTema: $descripcionTema})',
+      params
+    );
+
+    // Crear una relación en Neo4j entre el curso y el tema
+    await session.run(
+      'MATCH (c:Curso {codigoCurso: $codigoCurso}), (t:Tema {nombreTema: $nombreTema}) ' +
+      'CREATE (c)-[:Tema]->(t)',
+      { codigoCurso: codigoCurso, nombreTema: nombreTema }
+    );
+    session.close();
+
+    // Respuesta de éxito
+    res.send('<script>alert("Tema creado exitosamente."); window.location.href = "/listaCursos.html";</script>');
+  } catch (error) {
+    console.error('Error al crear el tema:', error);
+    res.status(500).json({ error: 'Error al crear el tema' });
+  }
+});
+
+app.get('/obtenerTemasPorCurso', async (req, res) => {
+  try {
+    const codigoCurso = req.query.curso;
+
+    // Consulta Neo4j para obtener los temas relacionados con el código del curso
+    const session = driver.session();
+    const result = await session.run(
+      'MATCH (c:Curso {codigoCurso: $codigoCurso})-[:Tema]->(t:Tema) RETURN t',
+      { codigoCurso: codigoCurso }
+    );
+    session.close();
+
+    const temas = result.records.map(record => record.get('t').properties);
+
+    // Envía la lista de temas como respuesta en formato JSON
+    res.json(temas);
+  } catch (error) {
+    console.error('Error al obtener temas por curso:', error);
+    res.status(500).json({ error: 'Error al obtener temas por curso' });
+  }
+});
+
+app.post('/crearSubtema', async (req, res) => {
+  try {
+    const temaSeleccionado = req.body.temaSeleccionado;
+    const nombreSubtema = req.body.nombreSubtema;
+    const descripcionSubtema = req.body.descripcionSubtema;
+
+    const nuevoSubtema = new SubTema({
+      nombreSubtema: nombreSubtema,
+      descripcionSubtema: descripcionSubtema,
+    });
+    await nuevoSubtema.save();
+
+    // Crear un nodo en Neo4j para representar el subtema
+    const session = driver.session();
+    const params = {
+      temaSeleccionado: temaSeleccionado,
+      nombreSubtema: nombreSubtema,
+      descripcionSubtema: descripcionSubtema,
+    };
+    await session.run(
+      'CREATE (s:Subtema {nombreSubtema: $nombreSubtema, descripcionSubtema: $descripcionSubtema})',
+      params
+    );
+
+    // Crear una relación en Neo4j entre el nodo del subtema y el nodo del tema seleccionado
+    await session.run(
+      'MATCH (t:Tema {nombreTema: $temaSeleccionado}), (s:Subtema {nombreSubtema: $nombreSubtema}) ' +
+      'CREATE (t)-[:Subtema]->(s)',
+      { temaSeleccionado: temaSeleccionado, nombreSubtema: nombreSubtema }
+    );
+    session.close();
+
+    // Respuesta de éxito
+    res.json({ success: true, message: 'Subtema creado exitosamente.' })
+  } catch (error) {
+    console.error('Error al crear el subtema:', error);
+    res.status(500).json({ success: false, message: 'Error al crear el subtema.' });
+  }
+});
+
+app.get('/obtenerDetallesTema', async (req, res) => {
+  try {
+      // Obtén el nombre del tema desde la consulta
+      const nombreTema = req.query.tema;
+
+      // Conecta con la base de datos de MongoDB y obtén los detalles del tema
+      const tema = await Tema.findOne({ nombreTema: nombreTema });
+
+      if (!tema) {
+          return res.status(404).json({ message: 'Tema no encontrado' });
+      }
+
+      // Envia los detalles del tema como respuesta
+      res.json(tema);
+  } catch (error) {
+      console.error('Error al obtener detalles del tema:', error);
+      res.status(500).json({ message: 'Error al obtener detalles del tema' });
+  }
+});
+
+app.get('/obtenerSubtemasPorTema', async (req, res) => {
+  const nombreTema = req.query.tema;
+  const session = driver.session();
+
+  try {
+      const result = await session.run(
+          'MATCH (t:Tema {nombreTema: $nombreTema})-[:Subtema]->(s:Subtema) RETURN s',
+          { nombreTema: nombreTema }
+      );
+
+      const subtemas = result.records.map(record => record.get('s').properties);
+      console.log(subtemas)
+      res.json(subtemas);
+  } catch (error) {
+      console.error('Error al obtener subtemas por tema:', error);
+      res.status(500).json({ error: 'Error al obtener subtemas por tema' });
+  } finally {
+      session.close();
+  }
+});
+
+app.get('/obtenerDetallesSubtema', async (req, res) => {
+  try {
+    // Obtén el nombre del subtema desde la consulta
+    const nombreSubtema = req.query.nombreSubtema;
+
+    // Busca el subtema en la base de datos
+    const subtema = await SubTema.findOne({ nombreSubtema });
+
+    if (!subtema) {
+      return res.status(404).json({ message: 'Subtema no encontrado' });
+    }
+
+    // Envia los detalles del subtema como respuesta
+    res.json(subtema);
+  } catch (error) {
+    console.error('Error al obtener detalles del subtema:', error);
+    res.status(500).json({ message: 'Error al obtener detalles del subtema' });
+  }
+});
+
+app.post("/guardarEvaluacionEnMongoDBYNeo4j", async (req, res) => {
+  try {
+    const evaluacion = req.body;
+    // Guardar la evaluación en MongoDB
+    const nuevaEvaluacion = new Evaluacion({
+      nombre: evaluacion.nombre,
+      preguntas: evaluacion.preguntas
+    });
+    await nuevaEvaluacion.save();
+
+    console.log("Evaluación guardada exitosamente en MongoDB:", nuevaEvaluacion);
+
+    // Conectarse a Neo4j
+    const session = driver.session();
+
+    // Crear un nodo de evaluación en Neo4j
+    const crearEvaluacionCypher = `
+      MATCH (curso:Curso {codigoCurso: $codigoCurso})
+      CREATE (evaluacion:Evaluacion {nombre: $nombreEvaluacion})
+      MERGE (curso)-[:Evaluacion]->(evaluacion)
+    `;
+
+    await session.run(crearEvaluacionCypher, {
+      codigoCurso: req.query.curso.trim(),
+      nombreEvaluacion: evaluacion.nombre
+    });
+
+    console.log("Evaluación guardada exitosamente en Neo4j.");
+
+    // Cerrar la sesión de Neo4j
+    session.close();
+
+    res.json({ success: true, message: "Evaluación guardada exitosamente en MongoDB y Neo4j" });
+  } catch (error) {
+    console.error("Error al guardar la evaluación:", error);
+    res.status(500).json({ error: "Error al guardar la evaluación" });
+  }
+});
 app.listen(port, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${port}`);
 });

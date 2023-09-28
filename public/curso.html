@@ -43,64 +43,114 @@
             <p><strong>Direccion de la imagen:</strong> <span id="imagen-curso"></span></p>
         </div>
         <h2 for="temas">Temas:</h2>
-        <div class="temas-curso">
+        <div class="temas-curso" id="temas-curso-container" >
             <!-- Temas del Curso (derecha) -->
         </div>
     </div>
     <!-- Botones en la parte inferior -->
     <div class="botonesCurso ">
-        <button class="agregar-tema">Agregar Tema</button>
-        <button class "agregar-subtema">Agregar Subtema</button>
+        <button id="crear-tema">Agregar Tema</button>
+        <button id="crear-subtema">Agregar Subtema</button>
         <button class="ver-estudiantes">Ver Lista de Estudiantes</button>
         <button class="ver-mensajes">Ver Mensajes</button>
         <button class="clonar-curso">Clonar Curso</button>
-        <button class="crear-evaluacion">Crear Evaluación</button>
+        <button id="crear-evaluacion">Crear Evaluación</button>
     </div>
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
 
     <script>
+        const crearTemaButton = document.getElementById("crear-tema");
+
+        // Agregar un controlador de eventos al botón "Crear Tema"
+        crearTemaButton.addEventListener("click", function() {
+            // Obtener el código del curso
+            const codigoDelCurso = document.getElementById("codigo-curso").textContent;
+            window.location.href = `crearTema.html?curso=${codigoDelCurso}`;
+        });
+
+        const crearSubtemaButton = document.getElementById("crear-subtema");
+
+        // Agregar un controlador de eventos al botón "Crear Tema"
+        crearSubtemaButton.addEventListener("click", function() {
+            // Obtener el código del curso
+            const codigoDelCurso = document.getElementById("codigo-curso").textContent;
+            // Redirigir a la página "crearTema.html" con el código del curso como parámetro
+            window.location.href = `crearSubtema.html?curso=${codigoDelCurso}`;
+        });
+
+        const crearEvaluacionButton = document.getElementById("crear-evaluacion");
+
+        // Agregar un controlador de eventos al botón "Crear Tema"
+        crearEvaluacionButton.addEventListener("click", function() {
+            // Obtener el código del curso
+            const codigoDelCurso = document.getElementById("codigo-curso").textContent;
+            // Redirigir a la página "crearTema.html" con el código del curso como parámetro
+            window.location.href = `crearEvaluacion.html?curso=${codigoDelCurso}`;
+        });
+
+
         function volverPantalla() {
             window.location.href = 'listaCursos.html';
         }
         
         document.addEventListener('DOMContentLoaded', function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const cursoNombre = urlParams.get('curso');
+        const urlParams = new URLSearchParams(window.location.search);
+        const cursoNombre = urlParams.get('curso');
 
-    if (cursoNombre) {
-        // Realiza una solicitud al servidor para obtener los detalles del curso
-        fetch(`/obtenerCurso?curso=${cursoNombre}`)
-            .then(response => response.json())
-            .then(curso => {
-                // Agrega el nombre del curso al título
-                console.log(curso)
-                const nombreCursoElement = document.getElementById('nombre-curso');
-                nombreCursoElement.textContent += ` ${curso.nombre}`;
+        if (cursoNombre) {
+            // Realiza una solicitud al servidor para obtener los detalles del curso
+            fetch(`/obtenerCurso?curso=${cursoNombre}`)
+                .then(response => response.json())
+                .then(curso => {
+                    // Agrega el nombre del curso al título
+                    const nombreCursoElement = document.getElementById('nombre-curso');
+                    nombreCursoElement.textContent += ` ${curso.nombre}`;
 
-                const codigoCursoElement = document.getElementById('codigo-curso');
-                codigoCursoElement.textContent += ` ${curso.codigoCurso}`;
+                    const codigoCursoElement = document.getElementById('codigo-curso');
+                    codigoCursoElement.textContent += ` ${curso.codigoCurso}`;
 
-                const descripcionCursoElement = document.getElementById('descripcion-curso');
-                descripcionCursoElement.textContent = curso.descripcion;
+                    const descripcionCursoElement = document.getElementById('descripcion-curso');
+                    descripcionCursoElement.textContent = curso.descripcion;
 
-                const fechaInicioCursoElement = document.getElementById('fecha-inicio-curso');
-                fechaInicioCursoElement.textContent = curso.fechaInicio;
+                    const fechaInicioCursoElement = document.getElementById('fecha-inicio-curso');
+                    fechaInicioCursoElement.textContent = curso.fechaInicio;
 
-                const fechaFinCursoElement = document.getElementById('fecha-fin-curso');
-                fechaFinCursoElement.textContent = curso.fechaFin;
+                    const fechaFinCursoElement = document.getElementById('fecha-fin-curso');
+                    fechaFinCursoElement.textContent = curso.fechaFin;
 
-                const imagenCursoElement = document.getElementById('imagen-curso');
-                imagenCursoElement.textContent = curso.imagenCurso;
+                    const imagenCursoElement = document.getElementById('imagen-curso');
+                    imagenCursoElement.textContent = curso.imagenCurso;
 
-                // Puedes agregar más campos según sea necesario
+                    fetch(`/obtenerTemasPorCurso?curso=${curso.codigoCurso}`)
+                    .then(response => response.json())
+                    .then(temas => {
+                        const temasContainer = document.getElementById('temas-curso-container');
+                        
+                        // Crear botones para cada tema
+                        temas.forEach(tema => {
+                            const temaButton = document.createElement('button');
+                            temaButton.textContent = tema.nombreTema;
+                            
+                            // Agregar un controlador de eventos al botón para redirigir a temas.html
+                            temaButton.addEventListener('click', function () {
+                                // Redirigir a temas.html con el nombre del tema como parámetro
+                                window.location.href = `temas.html?curso=${curso.codigoCurso}&tema=${encodeURIComponent(tema.nombreTema)}`;
+                            });
+
+                            temasContainer.appendChild(temaButton);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener temas del curso:', error);
+                    });
             })
             .catch(error => {
                 console.error('Error al obtener los detalles del curso:', error);
             });
-    }
-});
+        }
+    });
     </script>
 </body>
 </html>

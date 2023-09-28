@@ -6,16 +6,25 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Crear Evaluación</title>
 </head>
+<style>
+    /* Estilos para los campos de opción correcta y las 3 opciones */
+    select#correcta,
+    input.opcion-input {
+        font-size: 16px; /* Cambia el tamaño de la fuente */
+        padding: 10px; /* Aumenta el espacio interno para hacer los campos más grandes */
+        width: 100%; /* Haz que los campos ocupen todo el ancho disponible */
+        margin-bottom: 10px; /* Agrega espacio entre los campos */
+    }
+</style>
 <body>
     <header>
         <h1>TEC DIGITALITO</h1>
     </header>
 
-    <h2>Crear Evaluación</h2> <!-- Título de Crear Evaluación -->
+    <h2>Crear Evaluación</h2>
 
     <div class="evaluacion-form">
-        <form>
-            <!-- Formulario para datos generales de la evaluación -->
+        <form id="evaluacion-form">
             <label for="nombre-evaluacion">Nombre de la Evaluación:</label>
             <input type="text" id="nombre-evaluacion" name="nombre-evaluacion" required>
 
@@ -25,49 +34,131 @@
             <label for="fecha-fin">Fecha de Fin:</label>
             <input type="date" id="fecha-fin" name="fecha-fin" required>
 
-             <!-- Formulario para agregar preguntas -->
             <h2>Agregar Preguntas</h2>
 
             <label for="pregunta">Pregunta:</label>
             <input type="text" id="pregunta" name="pregunta" required>
 
-            
-            
+            <div class="respuestas">
+                <label for="opcion1">Opción 1:</label>
+                <input type="text" id="opcion1" name="opcion1" class="opcion-input" required>
+                
+                <label for="opcion2">Opción 2:</label>
+                <input type="text" id="opcion2" name="opcion2" class="opcion-input" required>
+                
+                <label for="opcion3">Opción 3:</label>
+                <input type="text" id="opcion3" name="opcion3" class="opcion-input" required>
+            </div>
 
+            <label for="correcta">Opción Correcta:</label>
+            <select id="correcta" name="correcta">
+                <option value="opcion1">Opción 1</option>
+                <option value="opcion2">Opción 2</option>
+                <option value="opcion3">Opción 3</option>
+            </select>
+
+            <!-- Botón para guardar pregunta -->
+            <button type="button" id="guardar-pregunta">Guardar Pregunta</button>
         </form>
     </div>
 
-    <div class="respuestas">
-        <label for="opcion1">Opción 1:</label>
-        <input type="text" id="opcion1" name="opcion1" required>
-
-        <label for="opcion2">Opción 2:</label>
-        <input type="text" id="opcion2" name="opcion2" required>
-
-        <label for="opcion3">Opción 3:</label>
-        <input type="text" id="opcion3" name="opcion3" required>
-        
-    </div>
-
-    <label for="correcta">Opción Correcta:</label>
-    
-    <select id="correcta" name="correcta">
-        <option value="opcion1">Opción 1</option>
-        <option value="opcion2">Opción 2</option>
-        <option value="opcion3">Opción 3</option>
-    </select>
-
-    
-    <!-- Botón para guardar pregunta -->
-    <button id="guardar-pregunta">Guardar Pregunta</button>
-
     <!-- Botón para terminar evaluación -->
-    <button id="terminar-evaluacion">Terminar Evaluación</button>
+    <button type="button" id="terminar-evaluacion">Terminar Evaluación</button>
 
     <!-- Botón de Volver -->
     <div class="boton-volver">
-        <button>Volver</button>
+        <button onclick="volverPantalla()">Volver</button>
     </div>
-    
+
+    <script>
+        const evaluacion = {
+            nombre: "",
+            preguntas: []
+        };
+
+        const evaluacionForm = document.getElementById("evaluacion-form");
+        const guardarPreguntaButton = document.getElementById("guardar-pregunta");
+        const terminarEvaluacionButton = document.getElementById("terminar-evaluacion");
+
+        guardarPreguntaButton.addEventListener("click", guardarPregunta);
+        evaluacionForm.addEventListener("submit", (e) => {
+            e.preventDefault(); // Evita el envío del formulario por defecto
+            guardarPregunta();
+        });
+
+        terminarEvaluacionButton.addEventListener("click", () => {
+            // Validar si hay al menos una pregunta antes de terminar la evaluación
+            if (evaluacion.preguntas.length === 0) {
+                alert("Agrega al menos una pregunta antes de terminar la evaluación.");
+                return;
+            }
+
+            // Obtener el nombre de la evaluación
+            const nombreEvaluacion = document.getElementById("nombre-evaluacion").value;
+            evaluacion.nombre = nombreEvaluacion;
+
+            // Obtener el código del curso de la URL actual
+            const urlParams = new URLSearchParams(window.location.search);
+            var cursoCodigo = urlParams.get('curso');
+            codigoCurso = cursoCodigo.trim();
+            // Enviar la evaluación al servidor (puedes usar fetch u otra biblioteca)
+            fetch(`/guardarEvaluacionEnMongoDBYNeo4j?curso=${cursoCodigo}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(evaluacion)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Manejar la respuesta del servidor, por ejemplo, mostrar un mensaje de éxito
+                console.log("Evaluación guardada exitosamente en MongoDB y Neo4j:", data);
+                alert("Evaluación guardada exitosamente en MongoDB y Neo4j.");
+            })
+            .catch(error => {
+                console.error("Error al guardar la evaluación en MongoDB y Neo4j:", error);
+                alert("Error al guardar la evaluación en MongoDB y Neo4j.");
+            });
+        });
+
+        function guardarPregunta() {
+            // Obtener datos de la pregunta y respuestas
+            const preguntaTexto = document.getElementById("pregunta").value;
+            const opcion1 = document.getElementById("opcion1").value;
+            const opcion2 = document.getElementById("opcion2").value;
+            const opcion3 = document.getElementById("opcion3").value;
+            const respuestaCorrecta = document.getElementById("correcta").value;
+
+            // Validar que se ingrese una respuesta correcta
+            if (!respuestaCorrecta) {
+                alert("Selecciona una respuesta correcta.");
+                return;
+            }
+
+            // Crear un objeto de pregunta
+            const pregunta = {
+                texto: preguntaTexto,
+                respuestas: [
+                    { texto: opcion1, correcta: respuestaCorrecta === "opcion1" },
+                    { texto: opcion2, correcta: respuestaCorrecta === "opcion2" },
+                    { texto: opcion3, correcta: respuestaCorrecta === "opcion3" }
+                ]
+            };
+
+            // Agregar la pregunta al array de preguntas en la evaluación
+            evaluacion.preguntas.push(pregunta);
+
+            // Limpiar los campos después de guardar la pregunta
+            document.getElementById("pregunta").value = "";
+            document.getElementById("opcion1").value = "";
+            document.getElementById("opcion2").value = "";
+            document.getElementById("opcion3").value = "";
+            document.getElementById("correcta").value = "opcion1"; // Reiniciar la selección a la opción 1
+        }
+
+        function volverPantalla() {
+            window.location.href = 'listaCursos.html';
+        }
+    </script>
 </body>
 </html>

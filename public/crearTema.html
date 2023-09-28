@@ -14,19 +14,30 @@
     <h2>Tema del Curso</h2> <!-- Título de Tema del Curso -->
 
     <div class="tema-curso-form">
-        <form>
+        <form action="/crearTema" method="POST">
+            <input type="hidden" id="codigo-curso" name="codigo-curso">
             <label for="nombre-tema">Nombre del Tema:</label>
             <input type="text" id="nombre-tema" name="nombre-tema" required>
-            <label for="nombre-tema">Descripcion del tema:</label>
-            <input type="text" id="nombre-tema" name="nombre-tema">
+            <label for="descripcion-tema">Descripción del Tema:</label>
+            <input type="text" id="descripcion-tema" name="descripcion-tema">
             <button id="crear-tema">Crear</button>
         </form>
     </div>
 
     <!-- Botón de Volver -->
     <div class="boton-volver">
-        <button>Volver</button>
+        <button onclick="volverPantalla()">Volver</button>
     </div>
-    
+
+    <script>
+        function volverPantalla() {
+            window.location.href = 'listaCursos.html'; // Ajusta la URL según tu estructura de archivos
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        var codigoCurso = urlParams.get('curso');
+        codigoCurso = codigoCurso.trim();
+        // Asigna el valor de "codigoCurso" a un campo oculto en el formulario
+        document.getElementById('codigo-curso').value = codigoCurso;
+    </script>
 </body>
 </html>
