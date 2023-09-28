@@ -525,6 +525,28 @@ app.post("/guardarEvaluacionEnMongoDBYNeo4j", async (req, res) => {
     res.status(500).json({ error: "Error al guardar la evaluación" });
   }
 });
+
+app.get('/obtenerCursosEstudiantesMatriculados', async (req, res) => {
+  try {
+    const nombreUsuario = req.session.usuario.usuario;
+
+    // Consulta Neo4j para obtener los cursos relacionados con el usuario
+    const session = driver.session();
+    const result = await session.run(
+      'MATCH (u:Usuario {username: $username})-[:Profesor]->(c:Curso) RETURN c',
+      { username: nombreUsuario }
+    );
+    session.close();
+
+    const cursos = result.records.map(record => record.get('c').properties);
+
+    // Envía la lista de cursos como respuesta en formato JSON
+    res.json(cursos);
+  } catch (error) {
+    console.error('Error al obtener la lista de cursos:', error);
+    res.status(500).json({ error: 'Error al obtener la lista de cursos' });
+  }
+});
 app.listen(port, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${port}`);
 });

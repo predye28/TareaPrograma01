@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Detalles del Tema</title>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2>Informacion del tema</h2> <!-- Título del Curso -->
+
+    <div class="contenedor-tema">
+        <h2 for="curso">Tema:</h2> 
+        <div class="informacion-tema">
+            <!-- Información del tema (izquierda) -->
+        </div>
+        <h2 for="temas">Subtemas:</h2>
+        <div class="subtemas">
+            <!-- subtemas del Tema (derecha) -->
+        </div>
+    </div>
+
+    <div class="boton-volver">
+        <button onclick="volverPantalla()">Volver</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cursoCodigo = urlParams.get('curso');
+            let nombreTema = decodeURIComponent(urlParams.get('tema'));
+
+            // Realiza una solicitud al servidor para obtener los detalles del tema
+            fetch(`/obtenerDetallesTema?tema=${nombreTema}`)
+                .then(response => response.json())
+                .then(tema => {
+                    // Actualiza los elementos HTML con los detalles del tema
+                    const informacionTemaElement = document.querySelector('.informacion-tema');
+
+                    const nombreTemaElement = document.createElement('p');
+                    nombreTemaElement.innerHTML = `<strong>Nombre del Tema:</strong> ${tema.nombreTema}`;
+                    informacionTemaElement.appendChild(nombreTemaElement);
+
+                    const descripcionTemaElement = document.createElement('p');
+                    descripcionTemaElement.innerHTML = `<strong>Descripción del Tema:</strong> ${tema.descripcionTema}`;
+                    informacionTemaElement.appendChild(descripcionTemaElement);
+
+                    // Agrega más campos según sea necesario
+                })
+                .catch(error => {
+                    console.error('Error al obtener detalles del tema:', error);
+                });
+
+            // Mueve la solicitud para obtener subtemas dentro del evento DOMContentLoaded
+            fetch(`/obtenerSubtemasPorTema?tema=${nombreTema}`)
+                .then(response => response.json())
+                .then(subtemas => {
+                    // Actualiza la sección de subtemas con botones que redirigen a subtemas.html
+                    const subtemasElement = document.querySelector('.subtemas');
+
+                    subtemas.forEach(subtema => {
+                        const subtemaButton = document.createElement('button');
+                        subtemaButton.textContent = subtema.nombreSubtema;
+
+                        // Agrega un event listener para redirigir a subtemas.html con el nombre del tema y subtema como parámetros
+                        subtemaButton.addEventListener('click', function () {
+                            window.location.href = `subtemasCursoEstudiante.html?nombreSubtema=${subtema.nombreSubtema}`;
+                        });
+
+
+
+                        subtemasElement.appendChild(subtemaButton);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al obtener subtemas del tema:', error);
+                });
+
+            
+        });
+        function volverPantalla() {
+                window.location.href = 'listaCursosEstudianteMatriculado.html';
+            }
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Detalles del Subtema</title>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2>Información del subtema</h2> 
+
+    <div class="contenedor-subtema">
+        <h2 for="nombreSubtema">Subtema:</h2> 
+        <div class="informacion-subtema" id="subtemaInfo">
+            <!-- Información del subtema se mostrará aquí -->
+        </div>
+    </div>
+
+    <div class="boton-volver">
+        <button onclick="volverPantalla()">Volver a cursos</button>
+    </div>
+
+    <script>
+        function volverPantalla() {
+            window.location.href = 'listaCursosEstudianteMatriculado.html';
+        }
+
+        // Obtener el nombre del subtema de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const nombreSubtema = decodeURIComponent(urlParams.get('nombreSubtema'));
+
+        // Realizar una solicitud al servidor para obtener la información del subtema
+        fetch(`/obtenerDetallesSubtema?nombreSubtema=${nombreSubtema}`)
+          .then(response => response.json())
+          .then(data => {
+            // Mostrar los detalles del subtema en el div "subtemaInfo"
+            document.getElementById('subtemaInfo').innerHTML = `
+              <p>Nombre del Subtema: ${data.nombreSubtema}</p>
+              <p>Descripción del Subtema: ${data.descripcionSubtema}</p>
+            `;
+          })
+          .catch(error => {
+            console.error('Error al obtener la información del subtema:', error);
+          });
+    </script>
+</body>
+</html>
+
