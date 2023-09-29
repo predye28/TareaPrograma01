@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Lista de Cursos</title>
+    <style>
+        /* Estilos CSS para los elementos dentro del div */
+        .curso {
+            display: flex; /* Utilizamos flexbox para controlar la disposición de los elementos */
+            justify-content: space-between; /* Coloca el label a la izquierda y el botón a la derecha */
+            align-items: center; /* Centra verticalmente los elementos */
+            margin-bottom: 10px; /* Espacio entre los elementos */
+        }
+
+        .nombre-curso {
+            flex-grow: 1; /* El label ocupará el espacio disponible */
+        }
+
+        .matricular {
+            margin-left: 10px; /* Espacio entre el label y el botón */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -14,7 +31,7 @@
     <h2>Lista de Cursos Estudiante</h2>
 
     <div class="lista-cursos">
-        <!-- Aquí se mostrarán los nombres de los cursos como botones o un mensaje si no hay cursos -->
+        <!-- Aquí se mostrarán los nombres de los cursos como elementos div con un botón de Matricular -->
     </div>
 
     <!-- Botón de Volver -->
@@ -23,7 +40,70 @@
     </div>
 
     <script>
-        
+        // Función para matricular al estudiante en un curso
+        function matricularEstudiante(cursoNombre) {
+            fetch('/matricularCurso', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cursoNombre: cursoNombre })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Mostrar un mensaje de éxito en la matriculación
+                alert(data.mensaje);
+                window.location.href = 'menuEstudiante.html';
+            })
+            .catch(error => {
+                console.error('Error al matricular al estudiante en el curso:', error);
+                // Manejar errores aquí
+            });
+        }
+
+        // Realiza una solicitud al servidor para obtener la lista de cursos para estudiantes
+        fetch('/obtenerCursosEstudiante')
+            .then(response => response.json())
+            .then(cursos => {
+                var listaCursosDiv = document.querySelector('.lista-cursos');
+                
+                if (cursos.length === 0) {
+                    var mensaje = document.createElement('p');
+                    mensaje.textContent = 'No tienes cursos disponibles.';
+                    listaCursosDiv.appendChild(mensaje);
+                } else {
+                    cursos.forEach(curso => {
+                        var cursoDiv = document.createElement('div'); 
+                        cursoDiv.classList.add('curso'); 
+                        
+                        var nombreCurso = document.createElement('label'); 
+                        nombreCurso.textContent = curso.nombre;
+                        
+                        var botonMatricular = document.createElement('button'); 
+                        botonMatricular.textContent = 'Matricular';
+                        botonMatricular.classList.add('matricular'); 
+                    
+                    
+                        botonMatricular.setAttribute('data-nombre', curso.nombre);
+                        
+                        botonMatricular.addEventListener('click', function() {
+                            // Obtener el nombre del curso del atributo data-nombre
+                            var nombreCurso = this.getAttribute('data-nombre');
+                            // Llamar a la función para matricular al estudiante en el curso
+                            matricularEstudiante(nombreCurso);
+                        });
+
+                        cursoDiv.appendChild(nombreCurso); 
+                        cursoDiv.appendChild(botonMatricular);
+
+                        listaCursosDiv.appendChild(cursoDiv); 
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener la lista de cursos para estudiantes:', error);
+            });
+
         function volverPantalla() {
             window.location.href = 'menuEstudiante.html';
         }

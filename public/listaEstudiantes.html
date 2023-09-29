@@ -14,15 +14,44 @@
     <h2>Lista de Estudiantes</h2> <!-- Título de Lista de Estudiantes -->
 
     <div class="lista-estudiantes">
-        <li>Estudiante 1</li>
-        <li>Estudiante 2</li>
-        <li>Estudiante 3</li>
+        
     </div>
 
     <!-- Botón de Volver -->
     <div class="boton-volver">
-        <button>Volver</button>
+        <button onclick="volverPantalla()">Volver</button>
     </div>
-    
+    <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const cursoNombre = urlParams.get('curso');
+
+        if (cursoNombre) {
+            // Realiza una solicitud al servidor para obtener el curso y la lista de estudiantes
+            fetch(`/obtenerCursoConEstudiantes?curso=${cursoNombre}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Manipula los datos recibidos, por ejemplo, muestra el nombre del curso y la lista de estudiantes en tu página
+                    const nombreCursoElement = document.getElementById('nombre-curso');
+                    nombreCursoElement.textContent = data.curso.nombre;
+
+                    const listaEstudiantesElement = document.getElementById('lista-estudiantes');
+                    data.estudiantes.forEach(estudiante => {
+                        const estudianteItem = document.createElement('li');
+                        estudianteItem.textContent = estudiante.nombre; // Asume que el nombre del estudiante está en la propiedad "nombre"
+                        listaEstudiantesElement.appendChild(estudianteItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al obtener el curso y la lista de estudiantes:', error);
+                });
+        }
+    });
+        function volverPantalla() {
+            window.location.href = 'listaCursosEstudianteMatriculado.html';
+        }
+
+    </script>
 </body>
 </html>

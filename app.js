@@ -533,7 +533,7 @@ app.get('/obtenerCursosEstudiantesMatriculados', async (req, res) => {
     // Consulta Neo4j para obtener los cursos relacionados con el usuario
     const session = driver.session();
     const result = await session.run(
-      'MATCH (u:Usuario {username: $username})-[:Profesor]->(c:Curso) RETURN c',
+      'MATCH (u:Usuario {username: $username})-[:Estudiante]->(c:Curso) RETURN c',
       { username: nombreUsuario }
     );
     session.close();
@@ -547,6 +547,98 @@ app.get('/obtenerCursosEstudiantesMatriculados', async (req, res) => {
     res.status(500).json({ error: 'Error al obtener la lista de cursos' });
   }
 });
+
+
+app.get('/obtenerCursosEstudiante', async (req, res) => {
+  try {
+    const nombreUsuario = req.session.usuario.usuario;
+
+    // Consulta Neo4j para obtener los cursos en los que el usuario es profesor
+    const session = driver.session();
+    const neo4jProfesorResult = await session.run(
+      'MATCH (u:Usuario {username: $username})-[:Profesor]->(cursosProfesor:Curso) RETURN cursosProfesor',
+      { username: nombreUsuario }
+    );
+
+    // Consulta Neo4j para obtener los cursos en los que el usuario es estudiante
+    const neo4jEstudianteResult = await session.run(
+      'MATCH (u:Usuario {username: $username})-[:Estudiante]->(cursosEstudiante:Curso) RETURN cursosEstudiante',
+      { username: nombreUsuario }
+    );
+
+    session.close();
+
+    const cursosProfesor = neo4jProfesorResult.records.map(record => record.get('cursosProfesor').properties);
+    const cursosEstudiante = neo4jEstudianteResult.records.map(record => record.get('cursosEstudiante').properties);
+
+    // Consulta MongoDB para obtener todos los cursos
+    const cursosMongo = await Curso.find({}).exec();
+
+    // Filtrar cursos para obtener solo los que el usuario no es profesor ni estudiante
+    const cursosNoProfesorEstudiante = cursosMongo.filter(curso => {
+      // Verificar si el curso no está en la lista de cursos en los que el usuario es profesor
+      // y tampoco está en la lista de cursos en los que el usuario es estudiante
+      return !cursosProfesor.some(cursoProfesor => cursoProfesor.nombre === curso.nombre) &&
+             !cursosEstudiante.some(cursoEstudiante => cursoEstudiante.nombre === curso.nombre);
+    });
+
+    // Envía la lista de cursos no relacionados como respuesta en formato JSON
+    res.json(cursosNoProfesorEstudiante);
+  } catch (error) {
+    console.error('Error al obtener la lista de cursos no relacionados:', error);
+    res.status(500).json({ error: 'Error al obtener la lista de cursos no relacionados' });
+  }
+});
+
+
+app.post('/matricularCurso', async (req, res) => {
+  try {
+    const nombreUsuario = req.session.usuario.usuario;
+    const nombreCurso = req.body.cursoNombre; // Nombre del curso a matricular
+
+    // Aquí realizas la lógica para crear la relación "Estudiante" entre el usuario y el curso en Neo4j
+    const session = driver.session();
+    await session.run(
+      'MATCH (u:Usuario {username: $username}), (c:Curso {nombre: $cursoNombre}) ' +
+      'CREATE (u)-[:Estudiante]->(c)',
+      { username: nombreUsuario, cursoNombre: nombreCurso }
+    );
+    session.close();
+
+    // Envía una respuesta exitosa
+    res.status(200).json({ mensaje: 'Curso matriculado exitosamente' });
+  } catch (error) {
+    console.error('Error al matricular al estudiante en el curso:', error);
+    res.status(500).json({ error: 'Error al matricular al estudiante en el curso' });
+  }
+});
+
+app.get('/obtenerNombresEstudiantesPorCurso', async (req, res) => {
+  try {
+      const nombreCurso = req.query.curso; // Nombre del curso desde la consulta
+
+      // Realiza una consulta a Neo4j para obtener los nombres de los estudiantes matriculados en el curso
+      const session = driver.session();
+      const neo4jResult = await session.run(
+          'MATCH (curso:Curso {nombre: $nombreCurso})<-[:Estudiante]-(estudiante:Usuario) RETURN estudiante.nombre',
+          { nombreCurso }
+      );
+      session.close();
+
+      // Extraer la lista de nombres de estudiantes del resultado de Neo4j
+      const nombresEstudiantes = neo4jResult.records.map(record => record.get('estudiante.nombre'));
+
+      // Responder con la lista de nombres de estudiantes en formato JSON
+      res.json(nombresEstudiantes);
+  } catch (error) {
+      console.error('Error al obtener la lista de nombres de estudiantes matriculados por curso:', error);
+      res.status(500).json({ error: 'Error al obtener la lista de nombres de estudiantes matriculados por curso' });
+  }
+});
+
+
+
+
 app.listen(port, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${port}`);
 });
