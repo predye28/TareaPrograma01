@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Detalles del Curso</title>
+    <style>
+        /* Estilos para los botones */
+        .botonesCurso button {
+            margin-right: 10px; /* Agrega un margen entre los botones */
+        }
+
+        /* Estilos para el div de información del curso */
+        .informacion-curso {
+            padding: 10px; /* Agrega un espacio interno para separar el contenido del borde */
+            border: 1px solid #ccc; /* Agrega un borde alrededor del div */
+            margin-bottom: 20px; /* Agrega espacio debajo del div */
+        }
+
+        /* Estilos para el div de temas del curso (puedes ajustar según sea necesario) */
+        .temas-curso {
+            padding: 10px; /* Agrega espacio interno para separar el contenido del borde */
+            border: 1px solid #ccc; /* Agrega un borde alrededor del div */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2 >Informacion del curso </h2>
+
+    <div class="contenedor-curso">
+        <h2 for="curso">Curso:</h2> 
+        <div class="informacion-curso" id="curso-info">
+            <p><strong>Nombre del Curso: </strong> <span id="nombre-curso"></span></p>
+            <p><strong>Codigo del curso:</strong> <span id="codigo-curso"></span></p>
+            <p><strong>Descripción:</strong> <span id="descripcion-curso"></span></p>
+            <p><strong>Fecha de Inicio:</strong> <span id="fecha-inicio-curso"></span></p>
+            <p><strong>Fecha de Fin:</strong> <span id="fecha-fin-curso"></span></p>
+            <p><strong>Direccion de la imagen:</strong> <span id="imagen-curso"></span></p>
+        </div>
+    </div>
+    <div class="boton-volver">
+        <button onclick="volverPantalla()">Volver</button>
+    </div>
+
+    <script>
+        // Obtener el valor del parámetro "curso" de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const nombreCurso = urlParams.get('curso');
+        fetch(`/obtenerDetallesCurso?curso=${nombreCurso}`)
+        .then(response => response.json())
+        .then(data => {
+            // Manipula los datos recibidos y muestra los detalles del curso en la página
+            const nombreCursoElement = document.getElementById('nombre-curso');
+            nombreCursoElement.textContent = data.nombre;
+
+            const codigoCursoElement = document.getElementById('codigo-curso');
+            codigoCursoElement.textContent = data.codigoCurso;
+
+            const descripcionCursoElement = document.getElementById('descripcion-curso');
+            descripcionCursoElement.textContent = data.descripcion;
+
+            const fechaInicioCursoElement = document.getElementById('fecha-inicio-curso');
+            fechaInicioCursoElement.textContent = data.fechaInicio;
+
+            const fechaFinCursoElement = document.getElementById('fecha-fin-curso');
+            fechaFinCursoElement.textContent = data.fechaFin;
+
+            const imagenCursoElement = document.getElementById('imagen-curso');
+            imagenCursoElement.textContent = data.imagenCurso;
+        })
+        .catch(error => {
+            console.error('Error al obtener los detalles del curso:', error);
+        });
+        function volverPantalla() {
+            window.location.href = 'listaCursosEstudianteDisponibles.html';
+        }
+        
+    </script>
+</body>
+</html>

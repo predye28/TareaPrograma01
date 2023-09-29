@@ -92,9 +92,20 @@
                             // Llamar a la función para matricular al estudiante en el curso
                             matricularEstudiante(nombreCurso);
                         });
-
+                        var botonVerInformacion = document.createElement('button'); // Botón "Ver información"
+                            botonVerInformacion.textContent = 'Ver Información';
+                            botonVerInformacion.classList.add('ver-informacion');
+                            botonVerInformacion.setAttribute('data-nombre', curso.nombre); 
+                            
+                            botonVerInformacion.addEventListener('click', function() {
+                                // Obtener el nombre del curso del atributo data-nombre
+                                var nombreCurso = this.getAttribute('data-nombre');
+                                // Redirigir a la página "CursoInformacion.html" con el nombre del curso en la URL
+                                window.location.href = `CursoInformacion.html?curso=${nombreCurso}`;
+                            });
                         cursoDiv.appendChild(nombreCurso); 
                         cursoDiv.appendChild(botonMatricular);
+                        cursoDiv.appendChild(botonVerInformacion);
 
                         listaCursosDiv.appendChild(cursoDiv); 
                     });

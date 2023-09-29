@@ -51,7 +51,7 @@
     <div class="botonesCurso ">
         <button id="crear-tema">Agregar Tema</button>
         <button id="crear-subtema">Agregar Subtema</button>
-        <button class="ver-estudiantes">Ver Lista de Estudiantes</button>
+        <button id="ver-estudiantes">Ver Lista de Estudiantes</button>
         <button class="ver-mensajes">Ver Mensajes</button>
         <button class="clonar-curso">Clonar Curso</button>
         <button id="crear-evaluacion">Crear Evaluación</button>
@@ -88,8 +88,17 @@
             const codigoDelCurso = document.getElementById("codigo-curso").textContent;
             // Redirigir a la página "crearTema.html" con el código del curso como parámetro
             window.location.href = `crearEvaluacion.html?curso=${codigoDelCurso}`;
+            
         });
 
+        const verListaEstudiantesButton = document.getElementById("ver-estudiantes");
+
+        // Agregar un controlador de eventos al botón "Crear Tema"
+        verListaEstudiantesButton.addEventListener("click", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cursoNombre = urlParams.get('curso');
+            window.location.href = `listaEstudiantesCurso.html?curso=${cursoNombre}`;
+        });
 
         function volverPantalla() {
             window.location.href = 'listaCursos.html';

@@ -533,7 +533,7 @@ app.get('/obtenerCursosEstudiantesMatriculados', async (req, res) => {
     // Consulta Neo4j para obtener los cursos relacionados con el usuario
     const session = driver.session();
     const result = await session.run(
-      'MATCH (u:Usuario {username: $username})-[:Estudiante]->(c:Curso) RETURN c',
+      'MATCH (u:Usuario {username: $username})<-[:Estudiante]-(c:Curso) RETURN c',
       { username: nombreUsuario }
     );
     session.close();
@@ -562,7 +562,7 @@ app.get('/obtenerCursosEstudiante', async (req, res) => {
 
     // Consulta Neo4j para obtener los cursos en los que el usuario es estudiante
     const neo4jEstudianteResult = await session.run(
-      'MATCH (u:Usuario {username: $username})-[:Estudiante]->(cursosEstudiante:Curso) RETURN cursosEstudiante',
+      'MATCH (u:Usuario {username: $username})<-[:Estudiante]-(cursosEstudiante:Curso) RETURN cursosEstudiante',
       { username: nombreUsuario }
     );
 
@@ -600,7 +600,7 @@ app.post('/matricularCurso', async (req, res) => {
     const session = driver.session();
     await session.run(
       'MATCH (u:Usuario {username: $username}), (c:Curso {nombre: $cursoNombre}) ' +
-      'CREATE (u)-[:Estudiante]->(c)',
+      'CREATE (c)-[:Estudiante]->(u)',
       { username: nombreUsuario, cursoNombre: nombreCurso }
     );
     session.close();
@@ -615,19 +615,19 @@ app.post('/matricularCurso', async (req, res) => {
 
 app.get('/obtenerNombresEstudiantesPorCurso', async (req, res) => {
   try {
-      const nombreCurso = req.query.curso; // Nombre del curso desde la consulta
-
+    const nombreCurso = req.query.curso.trim(); // Nombre del curso desde la consulta
+      console.log(nombreCurso)
       // Realiza una consulta a Neo4j para obtener los nombres de los estudiantes matriculados en el curso
       const session = driver.session();
       const neo4jResult = await session.run(
-          'MATCH (curso:Curso {nombre: $nombreCurso})<-[:Estudiante]-(estudiante:Usuario) RETURN estudiante.nombre',
+          'MATCH (curso:Curso {nombre: $nombreCurso})-[:Estudiante]->(estudiante:Usuario) RETURN estudiante.username',
           { nombreCurso }
       );
       session.close();
 
       // Extraer la lista de nombres de estudiantes del resultado de Neo4j
-      const nombresEstudiantes = neo4jResult.records.map(record => record.get('estudiante.nombre'));
-
+      const nombresEstudiantes = neo4jResult.records.map(record => record.get('estudiante.username'));
+      console.log(nombresEstudiantes)
       // Responder con la lista de nombres de estudiantes en formato JSON
       res.json(nombresEstudiantes);
   } catch (error) {
@@ -637,7 +637,26 @@ app.get('/obtenerNombresEstudiantesPorCurso', async (req, res) => {
 });
 
 
+app.get('/obtenerDetallesCurso', async (req, res) => {
+  try {
+      const nombreCurso = req.query.curso.trim(); // Obtén el nombre del curso de la consulta
+      console.log(nombreCurso)
+      // Realiza una consulta a MongoDB para obtener los detalles del curso
+      const curso = await Curso.findOne({ nombre: nombreCurso });
 
+      if (!curso) {
+          res.status(404).json({ mensaje: 'Curso no encontrado' });
+          return;
+      }
+
+      // Si el curso se encuentra en MongoDB, puedes responder con los detalles
+      res.json(curso);
+
+  } catch (error) {
+      console.error('Error al obtener los detalles del curso:', error);
+      res.status(500).json({ error: 'Error al obtener los detalles del curso' });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${port}`);
