@@ -51,7 +51,7 @@
     <div class="botonesCurso ">
         <button id="evaluaciones">Evaluaciones</button>
         <button id="lista-estudiantes">Ver lista estudiantes</button>
-        <button class="consulta">Consulta al profesor</button>
+        <button id="consulta">Consulta al profesor</button>
     </div>
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
@@ -77,6 +77,17 @@
 
             window.location.href = `listaEvaluaciones.html?codigo=${codigoDelCurso}`;
         });
+
+        const consultaButton = document.getElementById("consulta");
+
+        // Agregar un controlador de eventos al botón "Crear Tema"
+        consultaButton.addEventListener("click", function() {
+
+            const codigoDelCurso = document.getElementById("codigo-curso").textContent;
+
+            window.location.href = `chatEstudianteProfesor.html?codigo=${codigoDelCurso}`;
+        });
+
 
         function volverPantalla() {
             window.location.href = 'listaCursosEstudianteMatriculado.html';
