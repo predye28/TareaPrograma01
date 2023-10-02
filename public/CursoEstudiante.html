@@ -73,9 +73,9 @@
         // Agregar un controlador de eventos al botón "Crear Tema"
         verEvaluacionesButton.addEventListener("click", function() {
 
-            //const codigoDelCurso = document.getElementById("codigo-curso").textContent;
+            const codigoDelCurso = document.getElementById("codigo-curso").textContent;
 
-            //window.location.href = `crearTema.html?curso=${codigoDelCurso}`;
+            window.location.href = `listaEvaluaciones.html?codigo=${codigoDelCurso}`;
         });
 
         function volverPantalla() {

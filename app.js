@@ -76,6 +76,15 @@ const evaluacionSchema = new mongoose.Schema({
 
 const Evaluacion = mongoose.model('Evaluacion', evaluacionSchema);
 
+const notasSchema = new mongoose.Schema({
+  usuario: String,
+  nombreCurso: String,
+  nombreEvaluacion: String,
+  notaFinal: String
+}, { collection: 'notas' }); 
+
+const Notas = mongoose.model('notas', notasSchema);
+
 //neo4j
 const neo4j = require('neo4j-driver');
 
@@ -640,7 +649,6 @@ app.get('/obtenerNombresEstudiantesPorCurso', async (req, res) => {
 app.get('/obtenerDetallesCurso', async (req, res) => {
   try {
       const nombreCurso = req.query.curso.trim(); // Obtén el nombre del curso de la consulta
-      console.log(nombreCurso)
       // Realiza una consulta a MongoDB para obtener los detalles del curso
       const curso = await Curso.findOne({ nombre: nombreCurso });
 
@@ -657,6 +665,94 @@ app.get('/obtenerDetallesCurso', async (req, res) => {
       res.status(500).json({ error: 'Error al obtener los detalles del curso' });
   }
 });
+
+app.get('/obtenerEvaluaciones', async (req, res) => {
+  try {
+      const codigoCurso = req.query.curso.trim(); // Obtén el nombre del curso de la consulta
+      // Realiza una consulta a Neo4j para obtener las evaluaciones relacionadas con el curso
+      const session = driver.session();
+      const result = await session.run(
+          `
+          MATCH (c:Curso {codigoCurso: $codigoCurso})-[:Evaluacion ]->(e:Evaluacion)
+          RETURN e.nombre AS nombre
+          `,
+          { codigoCurso }
+      );
+
+      const evaluaciones = result.records.map(record => record.get('nombre'));
+
+      session.close();
+
+      res.json(evaluaciones);
+  } catch (error) {
+      console.error('Error al obtener evaluaciones desde Neo4j:', error);
+      res.status(500).json({ error: 'Error al obtener evaluaciones desde Neo4j' });
+  }
+});
+
+app.get('/obtenerNotas', async (req, res) => {
+  try {
+      const nombreEvaluacion = req.query.nombreEvaluacion;
+      const usuario = req.session.usuario.usuario; // Obtén el nombre del usuario de la sesión
+
+      // Realiza una consulta en MongoDB para obtener las notas del usuario para la evaluación específica
+      const notas = await Notas.find({ usuario, nombreEvaluacion });
+
+      res.json(notas);
+  } catch (error) {
+      console.error('Error al obtener notas desde MongoDB:', error);
+      res.status(500).json({ error: 'Error al obtener notas desde MongoDB' });
+  }
+});
+
+app.get('/obtenerEvaluacion', async (req, res) => {
+  try {
+      const nombreEvaluacion = req.query.nombreEvaluacion.trim();
+      
+      // Realiza una consulta a MongoDB para obtener los detalles de la evaluación
+      const evaluacion = await Evaluacion.findOne({ nombre: nombreEvaluacion });
+
+      if (!evaluacion) {
+          res.status(404).json({ mensaje: 'Evaluación no encontrada' });
+          return;
+      }
+
+      // Si la evaluación se encuentra en MongoDB, puedes responder con los detalles
+      res.json(evaluacion);
+
+  } catch (error) {
+      console.error('Error al obtener los detalles de la evaluación:', error);
+      res.status(500).json({ error: 'Error al obtener los detalles de la evaluación' });
+  }
+});
+
+app.post('/guardarNotaFinal', async (req, res) => {
+  try {
+      const nombreEvaluacion = req.query.nombreEvaluacion;
+      const codigoCurso = req.body.codigoCurso;
+      const notaFinal = req.body.notaFinal;
+
+      // Obtén el nombre del usuario desde la sesión (asegúrate de configurar la sesión)
+      const nombreUsuario = req.session.usuario.usuario;
+
+      // Guarda la nota final en la base de datos (MongoDB)
+      const nuevaNota = new Notas({
+          usuario: nombreUsuario,
+          nombreCurso: codigoCurso,
+          nombreEvaluacion: nombreEvaluacion,
+          notaFinal: notaFinal.toString()
+      });
+
+      await nuevaNota.save();
+
+      console.log(`Nota final de la evaluación "${nombreEvaluacion}" guardada para el usuario "${nombreUsuario}": ${notaFinal}`);
+      res.status(200).json({ mensaje: 'Nota final guardada con éxito' });
+  } catch (error) {
+      console.error('Error al guardar la nota final:', error);
+      res.status(500).json({ error: 'Error al guardar la nota final' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Servidor Express en funcionamiento en el puerto ${port}`);

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Lista de Evaluaciones</title>
+    <style>
+        /* Estilos para los elementos div de evaluación */
+        .evaluacion {
+            background-color: #f0f0f0; /* Color de fondo predeterminado */
+            margin-bottom: 10px; /* Margen inferior entre los divs */
+            padding: 10px; /* Espaciado interno */
+            border: 1px solid #ccc; /* Borde para separar los divs */
+        }
+
+        /* Estilos para alternar colores de fondo */
+        .evaluacion:nth-child(even) {
+            background-color: #e0e0e0; /* Color de fondo para divs pares */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TEC DIGITALITO</h1>
+    </header>
+
+    <h2>Lista de Evaluaciones</h2>
+
+    <div class="lista-evaluaciones">
+        <!-- Aquí se mostrarán las evaluaciones como divs -->
+    </div>
+
+    <!-- Botón de Volver -->
+    <div class="boton-volver">
+        <button onclick="volverPantalla()">Volver</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cursoCodigo = urlParams.get('codigo');
+            
+            if (cursoCodigo) {
+                // Realiza una solicitud al servidor para obtener las evaluaciones del curso
+                fetch(`/obtenerEvaluaciones?curso=${encodeURIComponent(cursoCodigo)}`)
+                    .then(response => response.json())
+                    .then(async evaluaciones => {
+                        const listaEvaluacionesDiv = document.querySelector('.lista-evaluaciones');
+
+                        for (const evaluacion of evaluaciones) {
+                            const evaluacionDiv = document.createElement('div');
+                            evaluacionDiv.classList.add('evaluacion');
+
+                            // Realiza una solicitud al servidor para obtener las notas del usuario para esta evaluación
+                            const notasResponse = await fetch(`/obtenerNotas?nombreEvaluacion=${encodeURIComponent(evaluacion)}`);
+                            const notasData = await notasResponse.json();
+
+                            if (notasData.length > 0) {
+                                // El usuario ha realizado esta evaluación
+                                const notaFinal = parseFloat(notasData[0].notaFinal);
+
+                                evaluacionDiv.innerHTML = `
+                                    <h3>${evaluacion}</h3>
+                                    <p>Nota: ${notaFinal.toFixed(2)}</p>
+                                    <button disabled>Realizado</button>
+                                `;
+                            } else {
+                                // El usuario no ha realizado esta evaluación
+                                evaluacionDiv.innerHTML = `
+                                    <h3>${evaluacion}</h3>
+                                    <button onclick="realizarEvaluacion('${evaluacion}')">Realizar</button>
+                                `;
+                            }
+
+                            listaEvaluacionesDiv.appendChild(evaluacionDiv);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener evaluaciones:', error);
+                    });
+            }
+        });
+
+        // Función para redirigir a la página "realizarEvaluacion.html" con el código del curso y el nombre de la evaluación
+        function realizarEvaluacion(nombreEvaluacion) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cursoCodigo = urlParams.get('codigo');
+            window.location.href = `realizarEvaluacion.html?codigoCurso=${cursoCodigo}&nombreEvaluacion=${nombreEvaluacion}`;
+        }
+
+        // Función para volver a la página anterior
+        function volverPantalla() {
+            window.location.href = 'listaCursosEstudianteMatriculado.html';
+        }
+    </script>
+</body>
+</html>
+
