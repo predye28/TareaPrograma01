@@ -11,13 +11,11 @@
         <h1>TEC DIGITALITO</h1>
     </header>
 
-    <h2>Lista de Estudiantes</h2> <!-- Título de Lista de Estudiantes -->
-
+    <h2>Lista de Estudiantes</h2> 
     <div class="lista-estudiantes">
         <ul id="lista-estudiantes"></ul>
     </div>
 
-    <!-- Botón de Volver -->
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
@@ -28,15 +26,15 @@
         const cursoNombre = urlParams.get('curso');
 
         if (cursoNombre) {
-            // Realiza una solicitud al servidor para obtener la lista de estudiantes
+
             fetch(`/obtenerNombresEstudiantesPorCurso?curso=${cursoNombre}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Manipula los datos recibidos y muestra la lista de estudiantes en tu página
+                    
                     const listaEstudiantesElement = document.getElementById('lista-estudiantes');
                     data.forEach(estudiante => {
                         const estudianteItem = document.createElement('li');
-                        estudianteItem.textContent = estudiante; // Los nombres de los estudiantes ya son cadenas de texto
+                        estudianteItem.textContent = estudiante; 
                         listaEstudiantesElement.appendChild(estudianteItem);
                     });
                 })

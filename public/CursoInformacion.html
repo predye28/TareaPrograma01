@@ -6,22 +6,20 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Detalles del Curso</title>
     <style>
-        /* Estilos para los botones */
+    
         .botonesCurso button {
-            margin-right: 10px; /* Agrega un margen entre los botones */
+            margin-right: 10px; 
         }
 
-        /* Estilos para el div de información del curso */
         .informacion-curso {
-            padding: 10px; /* Agrega un espacio interno para separar el contenido del borde */
-            border: 1px solid #ccc; /* Agrega un borde alrededor del div */
-            margin-bottom: 20px; /* Agrega espacio debajo del div */
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            margin-bottom: 20px; 
         }
 
-        /* Estilos para el div de temas del curso (puedes ajustar según sea necesario) */
         .temas-curso {
-            padding: 10px; /* Agrega espacio interno para separar el contenido del borde */
-            border: 1px solid #ccc; /* Agrega un borde alrededor del div */
+            padding: 10px; 
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -48,13 +46,13 @@
     </div>
 
     <script>
-        // Obtener el valor del parámetro "curso" de la URL
+        
         const urlParams = new URLSearchParams(window.location.search);
         const nombreCurso = urlParams.get('curso');
         fetch(`/obtenerDetallesCurso?curso=${nombreCurso}`)
         .then(response => response.json())
         .then(data => {
-            // Manipula los datos recibidos y muestra los detalles del curso en la página
+          
             const nombreCursoElement = document.getElementById('nombre-curso');
             nombreCursoElement.textContent = data.nombre;
 

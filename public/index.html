@@ -20,14 +20,12 @@
         </form>
         <p>¿No tienes una cuenta? <a href="registro.html">Registrarse</a></p>
         
-        <!-- Agrega un div para mostrar el mensaje de error -->
         <div id="error-message" style="display: none; color: red;">
             Credenciales incorrectas. Inténtalo de nuevo.
         </div>
     </div>
     
     <script>
-        // Obtén el parámetro "loginError" de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const loginError = urlParams.get('loginError');
 

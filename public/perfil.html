@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <style>
-        /* Estilo para ocultar el botón "Guardar" cuando está deshabilitado */
         #guardar:disabled {
             display: none;
         }
@@ -54,7 +53,7 @@
         }   
         let usuarioInfo = null;
     
-        // Función para cargar la información del usuario
+        
         async function cargarInformacionUsuario() {
             try {
                 const response = await fetch('/obtenerInformacionUsuario');
@@ -62,7 +61,7 @@
                     usuarioInfo = await response.json();
                     console.log('Información del usuario:', usuarioInfo);
     
-                    // Llena los campos con la información del usuario
+                    
                     document.getElementById('nombre-usuario').textContent = usuarioInfo.usuario;
                     document.getElementById('contrasena').value = usuarioInfo.contrasena;
                     document.getElementById('nombre').value = usuarioInfo.nombre;
@@ -76,19 +75,19 @@
             }
         }
     
-        // Función para habilitar la edición de campos
+       s
         function habilitarEdicion() {
             const camposEditables = ['contrasena', 'nombre', 'fecha-nacimiento', 'imagen'];
             const botonGuardar = document.getElementById('guardar');
 
-            // Habilitar campos editables y botón de guardar
+            
             camposEditables.forEach(campo => {
                 document.getElementById(campo).removeAttribute('disabled');
             });
             botonGuardar.removeAttribute('disabled');
         }
     
-        // Función para formatear una fecha en "yyyy-MM-dd"
+        
         function formatearFecha(fecha) {
             const date = new Date(fecha);
             const year = date.getFullYear();
@@ -97,23 +96,23 @@
             return `${year}-${month}-${day}`;
         }
     
-        // Función para guardar los cambios
+      
         async function guardarCambios() {
             try {
-                // Obtener los valores editados
+                
                 const contrasena = document.getElementById('contrasena').value;
                 const nombre = document.getElementById('nombre').value;
                 const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
                 const imagen = document.getElementById('imagen').value;
     
-                // Enviar los valores al servidor para actualizar
+               
                 const response = await fetch('/actualizarUsuario', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        usuario: usuarioInfo.usuario, // Usar el nombre de usuario actual
+                        usuario: usuarioInfo.usuario, 
                         contrasena,
                         nombre,
                         fecha_nacimiento: fechaNacimiento,
@@ -125,7 +124,7 @@
                     const mensaje = await response.json();
                     console.log('Mensaje del servidor:', mensaje);
     
-                    // Deshabilitar campos editables y botón de guardar
+                    
                     const camposEditables = ['contrasena', 'nombre', 'fecha-nacimiento', 'imagen'];
                     const botonGuardar = document.getElementById('guardar');
     
@@ -134,14 +133,13 @@
                     });
                     botonGuardar.setAttribute('disabled', 'disabled');
     
-                    // Mostrar mensaje de éxito
+                    
                     const mensajeDiv = document.getElementById('mensaje');
                     mensajeDiv.textContent = mensaje.mensaje;
                     mensajeDiv.style.color = 'green';
                 } else {
                     console.error('Error al guardar los cambios:', response.status);
     
-                    // Mostrar mensaje de error
                     const mensajeDiv = document.getElementById('mensaje');
                     mensajeDiv.textContent = 'Error al guardar los cambios.';
                     mensajeDiv.style.color = 'red';
@@ -149,14 +147,12 @@
             } catch (error) {
                 console.error('Error al guardar los cambios:', error);
     
-                // Mostrar mensaje de error
                 const mensajeDiv = document.getElementById('mensaje');
                 mensajeDiv.textContent = 'Error al guardar los cambios.';
                 mensajeDiv.style.color = 'red';
             }
         }
     
-        // Llama a la función para cargar la información del usuario cuando la página se carga
         window.onload = cargarInformacionUsuario;
     </script>
 </body>

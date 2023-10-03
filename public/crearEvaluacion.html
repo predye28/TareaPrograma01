@@ -7,13 +7,13 @@
     <title>Crear Evaluación</title>
 </head>
 <style>
-    /* Estilos para los campos de opción correcta y las 3 opciones */
+
     select#correcta,
     input.opcion-input {
-        font-size: 16px; /* Cambia el tamaño de la fuente */
-        padding: 10px; /* Aumenta el espacio interno para hacer los campos más grandes */
-        width: 100%; /* Haz que los campos ocupen todo el ancho disponible */
-        margin-bottom: 10px; /* Agrega espacio entre los campos */
+        font-size: 16px; 
+        padding: 10px; 
+        width: 100%; 
+        margin-bottom: 10px; 
     }
 </style>
 <body>
@@ -57,15 +57,12 @@
                 <option value="opcion3">Opción 3</option>
             </select>
 
-            <!-- Botón para guardar pregunta -->
             <button type="button" id="guardar-pregunta">Guardar Pregunta</button>
         </form>
     </div>
 
-    <!-- Botón para terminar evaluación -->
     <button type="button" id="terminar-evaluacion">Terminar Evaluación</button>
 
-    <!-- Botón de Volver -->
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
@@ -87,21 +84,19 @@
         });
 
         terminarEvaluacionButton.addEventListener("click", () => {
-            // Validar si hay al menos una pregunta antes de terminar la evaluación
+
             if (evaluacion.preguntas.length === 0) {
                 alert("Agrega al menos una pregunta antes de terminar la evaluación.");
                 return;
             }
 
-            // Obtener el nombre de la evaluación
             const nombreEvaluacion = document.getElementById("nombre-evaluacion").value;
             evaluacion.nombre = nombreEvaluacion;
 
-            // Obtener el código del curso de la URL actual
             const urlParams = new URLSearchParams(window.location.search);
             var cursoCodigo = urlParams.get('curso');
             codigoCurso = cursoCodigo.trim();
-            // Enviar la evaluación al servidor (puedes usar fetch u otra biblioteca)
+
             fetch(`/guardarEvaluacionEnMongoDBYNeo4j?curso=${cursoCodigo}`, {
                 method: "POST",
                 headers: {
@@ -111,7 +106,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Manejar la respuesta del servidor, por ejemplo, mostrar un mensaje de éxito
+
                 console.log("Evaluación guardada exitosamente en MongoDB y Neo4j:", data);
                 alert("Evaluación guardada exitosamente en MongoDB y Neo4j.");
             })
@@ -122,20 +117,18 @@
         });
 
         function guardarPregunta() {
-            // Obtener datos de la pregunta y respuestas
+
             const preguntaTexto = document.getElementById("pregunta").value;
             const opcion1 = document.getElementById("opcion1").value;
             const opcion2 = document.getElementById("opcion2").value;
             const opcion3 = document.getElementById("opcion3").value;
             const respuestaCorrecta = document.getElementById("correcta").value;
 
-            // Validar que se ingrese una respuesta correcta
             if (!respuestaCorrecta) {
                 alert("Selecciona una respuesta correcta.");
                 return;
             }
 
-            // Crear un objeto de pregunta
             const pregunta = {
                 texto: preguntaTexto,
                 respuestas: [
@@ -145,17 +138,15 @@
                 ]
             };
 
-            // Agregar la pregunta al array de preguntas en la evaluación
             evaluacion.preguntas.push(pregunta);
 
-            // Limpiar los campos después de guardar la pregunta
             document.getElementById("pregunta").value = "";
             document.getElementById("opcion1").value = "";
             document.getElementById("opcion2").value = "";
             document.getElementById("opcion3").value = "";
-            document.getElementById("correcta").value = "opcion1"; // Reiniciar la selección a la opción 1
+            document.getElementById("correcta").value = "opcion1";
         }
-
+        
         function volverPantalla() {
             window.location.href = 'listaCursos.html';
         }

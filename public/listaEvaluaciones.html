@@ -6,17 +6,16 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Lista de Evaluaciones</title>
     <style>
-        /* Estilos para los elementos div de evaluación */
+        
         .evaluacion {
-            background-color: #f0f0f0; /* Color de fondo predeterminado */
-            margin-bottom: 10px; /* Margen inferior entre los divs */
-            padding: 10px; /* Espaciado interno */
-            border: 1px solid #ccc; /* Borde para separar los divs */
+            background-color: #f0f0f0; 
+            margin-bottom: 10px; 
+            padding: 10px; 
+            border: 1px solid #ccc;
         }
 
-        /* Estilos para alternar colores de fondo */
         .evaluacion:nth-child(even) {
-            background-color: #e0e0e0; /* Color de fondo para divs pares */
+            background-color: #e0e0e0; 
         }
     </style>
 </head>
@@ -28,10 +27,9 @@
     <h2>Lista de Evaluaciones</h2>
 
     <div class="lista-evaluaciones">
-        <!-- Aquí se mostrarán las evaluaciones como divs -->
+        
     </div>
 
-    <!-- Botón de Volver -->
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
@@ -42,7 +40,7 @@
             const cursoCodigo = urlParams.get('codigo');
             
             if (cursoCodigo) {
-                // Realiza una solicitud al servidor para obtener las evaluaciones del curso
+              
                 fetch(`/obtenerEvaluaciones?curso=${encodeURIComponent(cursoCodigo)}`)
                     .then(response => response.json())
                     .then(async evaluaciones => {
@@ -52,12 +50,11 @@
                             const evaluacionDiv = document.createElement('div');
                             evaluacionDiv.classList.add('evaluacion');
 
-                            // Realiza una solicitud al servidor para obtener las notas del usuario para esta evaluación
                             const notasResponse = await fetch(`/obtenerNotas?nombreEvaluacion=${encodeURIComponent(evaluacion)}`);
                             const notasData = await notasResponse.json();
 
                             if (notasData.length > 0) {
-                                // El usuario ha realizado esta evaluación
+                                
                                 const notaFinal = parseFloat(notasData[0].notaFinal);
 
                                 evaluacionDiv.innerHTML = `
@@ -66,7 +63,7 @@
                                     <button disabled>Realizado</button>
                                 `;
                             } else {
-                                // El usuario no ha realizado esta evaluación
+                                
                                 evaluacionDiv.innerHTML = `
                                     <h3>${evaluacion}</h3>
                                     <button onclick="realizarEvaluacion('${evaluacion}')">Realizar</button>
@@ -82,14 +79,13 @@
             }
         });
 
-        // Función para redirigir a la página "realizarEvaluacion.html" con el código del curso y el nombre de la evaluación
         function realizarEvaluacion(nombreEvaluacion) {
             const urlParams = new URLSearchParams(window.location.search);
             const cursoCodigo = urlParams.get('codigo');
             window.location.href = `realizarEvaluacion.html?codigoCurso=${cursoCodigo}&nombreEvaluacion=${nombreEvaluacion}`;
         }
 
-        // Función para volver a la página anterior
+       
         function volverPantalla() {
             window.location.href = 'listaCursosEstudianteMatriculado.html';
         }

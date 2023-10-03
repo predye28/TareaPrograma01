@@ -6,19 +6,19 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Detalles del Curso</title>
     <style>
-        /* Estilos para los botones */
+
         .botonesCurso button {
             margin-right: 10px; 
         }
 
-        /* Estilos para el div de información del curso */
+  
         .informacion-curso {
             padding: 10px; 
             border: 1px solid #ccc; 
             margin-bottom: 20px;
         }
 
-        /* Estilos para el div de temas del curso (puedes ajustar según sea necesario) */
+     
         .temas-curso {
             padding: 10px; 
             border: 1px solid #ccc; 
@@ -44,10 +44,10 @@
         </div>
         <h2 for="temas">Temas:</h2>
         <div class="temas-curso" id="temas-curso-container" >
-            <!-- Temas del Curso (derecha) -->
+            
         </div>
     </div>
-    <!-- Botones en la parte inferior -->
+
     <div class="botonesCurso ">
         <button id="evaluaciones">Evaluaciones</button>
         <button id="lista-estudiantes">Ver lista estudiantes</button>
@@ -60,17 +60,14 @@
     <script>
         const verListaEstudiantesButton = document.getElementById("lista-estudiantes");
 
-        // Agregar un controlador de eventos al botón "Ver lista de estudiantes"
         verListaEstudiantesButton.addEventListener("click", function() {
             const nombreDelCurso = document.getElementById("nombre-curso").textContent;
-            
-            // Redirigir a la página listaEstudiantes.html con el nombre del curso como parámetro
+
             window.location.href = `listaEstudiantes.html?curso=${encodeURIComponent(nombreDelCurso)}`;
         });
 
         const verEvaluacionesButton = document.getElementById("evaluaciones");
 
-        // Agregar un controlador de eventos al botón "Crear Tema"
         verEvaluacionesButton.addEventListener("click", function() {
 
             const codigoDelCurso = document.getElementById("codigo-curso").textContent;
@@ -80,7 +77,6 @@
 
         const consultaButton = document.getElementById("consulta");
 
-        // Agregar un controlador de eventos al botón "Crear Tema"
         consultaButton.addEventListener("click", function() {
 
             const codigoDelCurso = document.getElementById("codigo-curso").textContent;
@@ -97,11 +93,11 @@
         const cursoNombre = urlParams.get('curso');
 
         if (cursoNombre) {
-            // Realiza una solicitud al servidor para obtener los detalles del curso
+
             fetch(`/obtenerCurso?curso=${cursoNombre}`)
                 .then(response => response.json())
                 .then(curso => {
-                    // Agrega el nombre del curso al título
+                  
                     const nombreCursoElement = document.getElementById('nombre-curso');
                     nombreCursoElement.textContent += ` ${curso.nombre}`;
 
@@ -124,15 +120,13 @@
                     .then(response => response.json())
                     .then(temas => {
                         const temasContainer = document.getElementById('temas-curso-container');
-                        
-                        // Crear botones para cada tema
+                     
                         temas.forEach(tema => {
                             const temaButton = document.createElement('button');
                             temaButton.textContent = tema.nombreTema;
-                            
-                            // Agregar un controlador de eventos al botón para redirigir a temas.html
+
                             temaButton.addEventListener('click', function () {
-                                // Redirigir a temas.html con el nombre del tema como parámetro
+                  
                                 window.location.href = `temasCursoEstudiante.html?curso=${curso.codigoCurso}&tema=${encodeURIComponent(tema.nombreTema)}`;
                             });
 

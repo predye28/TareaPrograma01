@@ -35,7 +35,6 @@
             window.location.href = 'menu.html';
         }
 
-        // Función para cargar la lista de usuarios
         async function cargarListaUsuarios() {
             try {
                 const response = await fetch('/obtenerUsuarios');
@@ -43,15 +42,14 @@
                     const usuarios = await response.json();
                     const resultadoContainer = document.querySelector('.resultado-container');
 
-                    // Limpia cualquier contenido anterior
+                    
                     resultadoContainer.innerHTML = '';
 
-                    // Agrega botones para cada usuario
+                    
                     usuarios.forEach(usuario => {
                         const botonUsuario = document.createElement('button');
                         botonUsuario.textContent = usuario.usuario;
 
-                        // Agrega un evento de clic para redirigir al usuario a la página de usuario.html
                         botonUsuario.addEventListener('click', () => {
                             window.location.href = `usuario.html?usuario=${encodeURIComponent(usuario.usuario)}`;
                         });
@@ -66,7 +64,7 @@
             }
         }
         
-        // Función para buscar usuarios
+     
         function buscarUsuarios() {
             const nombreUsuario = document.getElementById('nombre-usuario').value.toLowerCase();
             const botonesUsuarios = document.querySelectorAll('.resultado-container button');
@@ -74,17 +72,17 @@
             botonesUsuarios.forEach(botonUsuario => {
                 const nombre = botonUsuario.textContent.toLowerCase();
                 if (nombre.includes(nombreUsuario)) {
-                    botonUsuario.style.display = 'block'; // Muestra el botón si coincide con la búsqueda
+                    botonUsuario.style.display = 'block'; 
                 } else {
-                    botonUsuario.style.display = 'none'; // Oculta el botón si no coincide
+                    botonUsuario.style.display = 'none'; 
                 }
             });
         }
 
-        // Llama a la función para cargar la lista de usuarios cuando la página se carga
+
         window.onload = cargarListaUsuarios;
 
-        // Agrega un controlador de eventos al botón de búsqueda
+
         document.getElementById('buscar').addEventListener('click', buscarUsuarios);
     </script>
 </body>

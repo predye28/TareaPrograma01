@@ -14,31 +14,30 @@
     <h2 id="nombre-evaluacion">Nombre de la Evaluación</h2>
 
     <div class="pregunta">
-        <!-- Aquí se mostrará la pregunta actual -->
     </div>
 
     <div class="opciones">
-        <!-- Aquí se mostrarán las opciones de respuesta -->
+        
     </div>
 
     <button id="siguiente-pregunta">Siguiente Pregunta</button>
     <button id="terminar-evaluacion" style="display: none;">Terminar Evaluación</button>
 
     <script>
-        // Variable global para llevar el control de la pregunta actual
+        
         let preguntaActual = 0;
 
-        // Variable global para almacenar los datos de la evaluación
+        
         let evaluacionData;
 
-        // Función para mostrar la pregunta actual
+        
         function mostrarPregunta() {
             const preguntaElement = document.querySelector('.pregunta');
             const opcionesElement = document.querySelector('.opciones');
 
             preguntaElement.textContent = evaluacionData[preguntaActual].texto;
 
-            // Limpia las opciones anteriores
+            
             opcionesElement.innerHTML = '';
 
             evaluacionData[preguntaActual].respuestas.forEach((respuesta, index) => {
@@ -57,71 +56,65 @@
             });
 
             if (preguntaActual === evaluacionData.length - 1) {
-                // Es la última pregunta, muestra el botón "Terminar Evaluación"
+                
                 document.getElementById('siguiente-pregunta').style.display = 'none';
                 document.getElementById('terminar-evaluacion').style.display = 'block';
             } else {
-                // No es la última pregunta, muestra el botón "Siguiente Pregunta"
+                
                 document.getElementById('siguiente-pregunta').style.display = 'block';
                 document.getElementById('terminar-evaluacion').style.display = 'none';
             }
         }
 
-        // Función para avanzar a la siguiente pregunta
         function siguientePregunta() {
             preguntaActual++;
             mostrarPregunta();
         }
 
-        // Función para calcular la nota final
         function calcularNotaFinal() {
             const respuestasSeleccionadas = document.querySelectorAll('input[name="respuesta"]:checked');
             const respuestasCorrectas = evaluacionData.filter(pregunta => pregunta.respuestas.some(respuesta => respuesta.correcta));
 
-            // Calcula la nota final (cada pregunta vale 1 punto)
             const notaFinal = (respuestasSeleccionadas.length / respuestasCorrectas.length) * 100;
 
             return notaFinal;
         }
 
-        // Función para finalizar la evaluación y guardar la nota
         function finalizarEvaluacion() {
             const notaFinal = calcularNotaFinal();
 
-            // Obtiene el código del curso y el nombre de evaluación de la URL
+
             const urlParams = new URLSearchParams(window.location.search);
             const codigoCurso = urlParams.get('codigoCurso');
             const nombreEvaluacion = urlParams.get('nombreEvaluacion');
 
-            // Realiza una solicitud al servidor para guardar la nota final
             fetch(`/guardarNotaFinal?nombreEvaluacion=${encodeURIComponent(nombreEvaluacion)}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    codigoCurso, // Pasa el código del curso al servidor
+                    codigoCurso, 
                     notaFinal
                 })
             })
             .then(response => response.json())
             .then(data => {
-                // Muestra un mensaje de éxito en la página
+                
                 const mensajeElement = document.createElement('p');
                 mensajeElement.textContent = 'La evaluación se ha realizado correctamente.';
                 document.body.appendChild(mensajeElement);
 
-                // Redirige a la página deseada después de guardar la nota (puedes ajustar la URL)
                 setTimeout(() => {
                     window.location.href = 'listaCursosEstudianteMatriculado.html';
-                }, 2000); // Redirecciona después de 2 segundos (puedes ajustar el tiempo)
+                }, 2000); 
             })
             .catch(error => {
                 console.error('Error al guardar la nota final:', error);
             });
         }
 
-        // Agrega un controlador de eventos al botón "Terminar Evaluación"
+
         document.getElementById('terminar-evaluacion').addEventListener('click', finalizarEvaluacion);
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -129,24 +122,22 @@
             const codigoCurso = urlParams.get('codigoCurso');
             const nombreEvaluacion = urlParams.get('nombreEvaluacion');
 
-            // Realiza una solicitud al servidor para obtener los detalles de la evaluación
             fetch(`/obtenerEvaluacion?nombreEvaluacion=${encodeURIComponent(nombreEvaluacion)}`)
                 .then(response => response.json())
                 .then(evaluacion => {
                     const nombreEvaluacionElement = document.getElementById('nombre-evaluacion');
                     nombreEvaluacionElement.textContent = evaluacion.nombre;
 
-                    // Almacena los datos de la evaluación en la variable global
+
                     evaluacionData = evaluacion.preguntas;
 
-                    // Muestra la primera pregunta al cargar la página
+
                     mostrarPregunta();
                 })
                 .catch(error => {
                     console.error('Error al obtener detalles de la evaluación:', error);
                 });
 
-            // Agrega controladores de eventos a los botones
             document.getElementById('siguiente-pregunta').addEventListener('click', siguientePregunta);
         });
     </script>

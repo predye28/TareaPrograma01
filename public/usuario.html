@@ -16,20 +16,18 @@
         <div class="informacion-usuario">
             <h2>Información del Usuario</h2>
 
-            <!-- Aquí se mostrará la información del usuario cargada desde MongoDB -->
             <p><strong>Nombre de Usuario:</strong> <span id="usuario"></span></p>
             <p><strong>Nombre:</strong> <span id="nombre"></span></p>
             <p><strong>Fecha de Nacimiento:</strong> <span id="fecha-nacimiento"></span></p>
             <p><strong>Imagen:</strong> <span id="imagen"></span></p>
         </div>
 
-        <div class="botones-abajo"> <!-- Contenedor para botones debajo del div -->
+        <div class="botones-abajo"> 
             <button class="hacer-amigo">Hacer Amigo</button>
             <button class="enviar-mensaje">Enviar Mensaje</button>
         </div>
     </div>
 
-    <!-- Botón de Volver -->
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
@@ -38,8 +36,7 @@
         function volverPantalla() {
             window.location.href = 'listaUsuarios.html';
         }
-    
-        // Función para cargar la información del usuario desde MongoDB
+
         async function cargarInformacionUsuario() {
             try {
                 const usuario = obtenerParametroURL('usuario');
@@ -50,7 +47,6 @@
                     const usuarioInfo = await response.json();
                     console.log('Información del usuario:', usuarioInfo);
                     
-                    // Llena los elementos HTML con la información del usuario
                     document.getElementById('usuario').textContent = usuarioInfo.usuario;
                     document.getElementById('imagen').textContent = usuarioInfo.imagen;
                     document.getElementById('nombre').textContent = usuarioInfo.nombre;
@@ -62,14 +58,12 @@
                 console.error('Error al obtener la información del usuario:', error);
             }
         }
-    
-        // Función para obtener parámetros de la URL
+
         function obtenerParametroURL(nombre) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(nombre);
         }
-    
-        // Llama a la función para cargar la información del usuario cuando la página se carga
+
         window.onload = cargarInformacionUsuario;
     </script>
 </body>

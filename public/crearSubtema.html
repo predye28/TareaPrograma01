@@ -6,11 +6,10 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Subtema del Curso</title>
     <style>
-        /* Estilo para el select */
         select {
-            width: 100%; /* Hace que el select ocupe el 100% del ancho disponible */
-            padding: 5px; /* Agrega un espacio interno para separar el contenido del borde */
-            font-size: 16px; /* Ajusta el tamaño de la fuente según sea necesario */
+            width: 100%; 
+            padding: 5px;
+            font-size: 16px; 
         }
     </style>
 </head>
@@ -26,7 +25,6 @@
             <input type="hidden" id="codigo-curso" name="codigo-curso" value="<%= codigoCurso %>">
             <label for="tema">Seleccione el Tema:</label>
             <select id="tema" name="tema">
-                <!-- Opciones de temas se llenarán dinámicamente desde JavaScript -->
             </select>
 
             <label for="nombre-subtema">Nombre del Subtema:</label>
@@ -37,25 +35,21 @@
         </form>
     </div>
 
-    <!-- Botón de Volver -->
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Obtener el código del curso de la URL
             const urlParams = new URLSearchParams(window.location.search);
             let codigoCurso = urlParams.get('curso');
             codigoCurso = codigoCurso.trim();
-            // Obtener el elemento "select" para los temas
             const selectTema = document.getElementById('tema');
 
-            // Realizar una solicitud al servidor para obtener los temas del curso desde Neo4j
             fetch(`/obtenerTemasPorCurso?curso=${codigoCurso}`)
                 .then(response => response.json())
                 .then(temas => {
-                    // Llenar el select con los temas obtenidos
+
                     temas.forEach(tema => {
                         const option = document.createElement('option');
                         option.value = tema.nombreTema;
@@ -66,18 +60,15 @@
                 .catch(error => {
                     console.error('Error al obtener temas del curso:', error);
                 });
-
-            // Agregar un controlador de eventos al formulario para crear subtemas
+            
             const subtemaForm = document.getElementById('subtema-form');
             subtemaForm.addEventListener('submit', function (event) {
-                event.preventDefault(); // Evitar que el formulario se envíe automáticamente
+                event.preventDefault(); 
 
-                // Obtener los valores del formulario
                 const temaSeleccionado = selectTema.value;
                 const nombreSubtema = document.getElementById('nombre-subtema').value;
                 const descripcionSubtema = document.getElementById('descripcion-subtema').value;
-
-                // Realizar una solicitud al servidor para crear el subtema
+            
                 fetch('/crearSubtema', {
                     method: 'POST',
                     headers: {
@@ -92,10 +83,10 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Mostrar un mensaje de éxito o manejar la redirección según sea necesario
+                   
                     if (data.success) {
                         alert(data.message);
-                        window.location.href = 'listaCursos.html'; // Redireccionar a la página de curso
+                        window.location.href = 'listaCursos.html'; 
                     } else {
                         alert('Error al crear el subtema.');
                     }
@@ -108,9 +99,8 @@
 
             
         });
-        // Función para volver a la página de curso
         function volverPantalla() {
-                window.location.href = 'listaCursos.html'; // Ajusta la URL según tu estructura de archivos
+                window.location.href = 'listaCursos.html';
             }
     </script>
 </body>

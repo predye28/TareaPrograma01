@@ -14,16 +14,15 @@
     <h2>Lista de Cursos Profesor</h2>
 
     <div class="lista-cursos">
-        <!-- Aquí se mostrarán los nombres de los cursos como botones o un mensaje si no hay cursos -->
+        
     </div>
 
-    <!-- Botón de Volver -->
+  
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
 
     <script>
-        // Realiza una solicitud al servidor para obtener la lista de cursos
         fetch('/obtenerCursos')
             .then(response => response.json())
             .then(cursos => {
@@ -39,10 +38,10 @@
                     cursos.forEach(curso => {
                         var botonCurso = document.createElement('button');
                         botonCurso.textContent = curso.nombre;
-                        botonCurso.classList.add('curso-button'); // Agrega la clase CSS al botón
+                        botonCurso.classList.add('curso-button'); 
                         
                         botonCurso.addEventListener('click', function() {
-                            // Agrega la lógica que desees cuando se haga clic en un curso
+                            
                             window.location.href = 'curso.html?curso=' + curso.nombre;
                         });
 

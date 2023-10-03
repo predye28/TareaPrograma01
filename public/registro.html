@@ -28,22 +28,20 @@
     </div>
     
     <script>
-        // Mostrar el mensaje cuando se recibe la respuesta del servidor
         const mensajeDiv = document.getElementById("mensaje");
         const okButton = document.getElementById("okButton");
         const registroForm = document.getElementById("registroForm");
 
-        // Agregar un evento al botón "Aceptar" para redirigir al usuario
         okButton.addEventListener("click", function() {
-            window.location.href = "index.html"; // Redirigir a index.html
+            window.location.href = "index.html"; 
         });
 
-        // Manejar la respuesta del servidor
+
         const urlParams = new URLSearchParams(window.location.search);
         const registroExitoso = urlParams.get('registroExitoso');
         if (registroExitoso === 'true') {
             mensajeDiv.style.display = "block";
-            // Deshabilitar los elementos del formulario después del registro exitoso
+
             const formElements = registroForm.elements;
             for (let i = 0; i < formElements.length; i++) {
                 formElements[i].disabled = true;

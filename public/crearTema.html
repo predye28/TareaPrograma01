@@ -11,7 +11,7 @@
         <h1>TEC DIGITALITO</h1>
     </header>
 
-    <h2>Tema del Curso</h2> <!-- Título de Tema del Curso -->
+    <h2>Tema del Curso</h2> 
 
     <div class="tema-curso-form">
         <form action="/crearTema" method="POST">
@@ -24,19 +24,17 @@
         </form>
     </div>
 
-    <!-- Botón de Volver -->
     <div class="boton-volver">
         <button onclick="volverPantalla()">Volver</button>
     </div>
 
     <script>
         function volverPantalla() {
-            window.location.href = 'listaCursos.html'; // Ajusta la URL según tu estructura de archivos
+            window.location.href = 'listaCursos.html'; 
         }
         const urlParams = new URLSearchParams(window.location.search);
         var codigoCurso = urlParams.get('curso');
         codigoCurso = codigoCurso.trim();
-        // Asigna el valor de "codigoCurso" a un campo oculto en el formulario
         document.getElementById('codigo-curso').value = codigoCurso;
     </script>
 </body>
